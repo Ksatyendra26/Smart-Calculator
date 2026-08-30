@@ -37,13 +37,40 @@ body.dark{--bg:#070b14;--card:#111827;--soft:#182131;--text:#f8fafc;--muted:#94a
 @media(max-width:520px){body{padding:8px}.brand-icon{width:42px;height:42px}.brand h1{font-size:18px}.grid{gap:10px}.pad{padding:10px}.key{min-height:58px}.tools{grid-template-columns:repeat(2,1fr)}.item-head,.item{grid-template-columns:1.2fr .55fr .75fr .8fr 30px;font-size:10px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 @media(max-width:350px){.key{min-height:52px;font-size:17px}.result{font-size:32px}}
 @media print{body{background:white;padding:0}.app>header,.grid,.history,.footer,.modal{display:none!important}.invoice{display:block!important}}
+
+<style>
+/* ---------- Authentication UI ---------- */
+.auth-btn{height:42px;border:1px solid var(--line);background:var(--card);border-radius:13px;padding:0 13px;font-weight:850;color:var(--text)}
+.auth-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.auth-user{display:flex;align-items:center;gap:7px}
+.auth-name{max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:14px 0}
+.auth-tab{border:1px solid var(--line);background:var(--soft);padding:10px;border-radius:10px;font-weight:850}
+.auth-tab.active{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
+.auth-panel{display:none}.auth-panel.show{display:block}
+.auth-actions{display:grid;gap:8px;margin-top:12px}
+.auth-msg{min-height:18px;margin-top:9px;font-size:12px;font-weight:700}
+.auth-msg.error{color:var(--red)}.auth-msg.ok{color:var(--green)}
+.otp-box{display:none}.otp-box.show{display:block}
+.recaptcha-wrap{margin-top:10px}
+body.dark .auth-tab{background:#1e293b;color:#fff}
+body.dark .auth-tab.active{background:#17315a;color:#93c5fd}
+@media(max-width:520px){
+  .auth-name{display:none}
+  .auth-btn{padding:0 10px}
+}
+</style>
 </style>
 </head>
 <body>
 <div class="app">
 <header>
   <div class="brand"><div class="brand-icon">₹</div><div><h1>SMART CALCULATOR</h1><p>Kushwaha Traders • Business Billing</p></div></div>
-  <div class="head-actions"><button class="icon" id="installBtn" title="Install" hidden>⬇️</button><button class="icon" onclick="toggleDark()" title="Theme">🌙</button></div>
+  <div class="head-actions">
+    <button class="auth-btn primary" id="authBtn" onclick="openAuth()">🔐 Login</button>
+    <button class="icon" id="installBtn" title="Install" hidden>⬇️</button>
+    <button class="icon" onclick="toggleDark()" title="Theme">🌙</button>
+  </div>
 </header>
 
 <div class="grid">
@@ -97,10 +124,64 @@ body.dark{--bg:#070b14;--card:#111827;--soft:#182131;--text:#f8fafc;--muted:#94a
 </section>
 
 <section class="card history">
-  <div class="between"><div class="section-title">Bill History</div><button class="btn" onclick="clearHistory()">Clear History</button></div>
+  <div class="between"><div><div class="section-title">Bill History</div><div class="muted" id="historyUserNote">Login to save bills to your account</div></div><button class="btn" onclick="clearHistory()">Clear History</button></div>
   <div class="history-list" id="history"></div>
 </section>
 <div class="footer">SMART CALCULATOR © 2026 • Kushwaha Traders</div>
+</div>
+
+
+<div class="modal" id="authModal">
+  <div class="modal-card">
+    <div class="between">
+      <div>
+        <h2 id="authTitle" style="margin:0">Login</h2>
+        <div class="muted">Access your SMART CALCULATOR account</div>
+      </div>
+      <button class="close" onclick="closeAuth()">×</button>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="emailTab" onclick="switchAuthMode('email')">📧 Email</button>
+      <button class="auth-tab" id="phoneTab" onclick="switchAuthMode('phone')">📱 Mobile</button>
+    </div>
+
+    <div id="emailPanel" class="auth-panel show">
+      <div class="field">
+        <label>Email</label>
+        <input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+      </div>
+      <div class="field" style="margin-top:9px">
+        <label>Password</label>
+        <input id="authPassword" type="password" autocomplete="current-password" placeholder="Minimum 6 characters">
+      </div>
+      <div class="auth-actions">
+        <button class="btn primary" id="emailLoginBtn" onclick="emailLogin()">🔐 Login</button>
+        <button class="btn" id="emailSignupBtn" onclick="emailSignup()">📝 Create Account</button>
+        <button class="btn" onclick="resetPassword()">Forgot Password?</button>
+      </div>
+    </div>
+
+    <div id="phonePanel" class="auth-panel">
+      <div class="field">
+        <label>Mobile Number</label>
+        <input id="authPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 9876543210">
+      </div>
+      <div class="auth-actions">
+        <button class="btn primary" id="sendOtpBtn" onclick="sendOTP()">📲 Send OTP</button>
+      </div>
+      <div id="recaptcha-container" class="recaptcha-wrap"></div>
+      <div id="otpBox" class="otp-box">
+        <div class="field" style="margin-top:12px">
+          <label>OTP</label>
+          <input id="authOtp" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit OTP">
+        </div>
+        <button class="btn green" style="width:100%;margin-top:10px" onclick="verifyOTP()">✅ Verify OTP</button>
+      </div>
+    </div>
+
+    <div id="authMsg" class="auth-msg"></div>
+  </div>
 </div>
 
 <div class="modal" id="modal"><div class="modal-card">
@@ -112,6 +193,177 @@ body.dark{--bg:#070b14;--card:#111827;--soft:#182131;--text:#f8fafc;--muted:#94a
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+
+/* ================= Firebase Authentication ================= */
+let confirmationResult = null;
+let recaptchaVerifier = null;
+let authMode = 'email';
+
+function firebaseReady(){
+  return window.smartAuth && window.smartAuth.auth;
+}
+function authMessage(text, type='error'){
+  const el = $('authMsg');
+  if(!el) return;
+  el.textContent = text || '';
+  el.className = 'auth-msg ' + type;
+}
+function openAuth(){
+  $('authModal').classList.add('show');
+  authMessage('');
+}
+function closeAuth(){
+  $('authModal').classList.remove('show');
+  authMessage('');
+}
+$('authModal').addEventListener('click', e=>{if(e.target===$('authModal'))closeAuth()});
+
+function switchAuthMode(mode){
+  authMode=mode;
+  $('emailPanel').classList.toggle('show',mode==='email');
+  $('phonePanel').classList.toggle('show',mode==='phone');
+  $('emailTab').classList.toggle('active',mode==='email');
+  $('phoneTab').classList.toggle('active',mode==='phone');
+  authMessage('');
+  if(mode==='phone') setupRecaptcha();
+}
+
+function updateAuthUI(user){
+  const btn=$('authBtn');
+  if(!btn) return;
+  if(user){
+    const label=user.email || user.phoneNumber || 'Account';
+    btn.textContent='👤 ' + label;
+    btn.classList.remove('primary');
+    btn.title='Logout';
+    btn.onclick=logoutUser;
+  }else{
+    btn.textContent='🔐 Login';
+    btn.classList.add('primary');
+    btn.title='Login';
+    btn.onclick=openAuth;
+  }
+}
+
+async function emailLogin(){
+  if(!firebaseReady()) return authMessage('Firebase is not configured yet. Add your Firebase config first.');
+  const email=$('authEmail').value.trim();
+  const password=$('authPassword').value;
+  if(!email || !password) return authMessage('Enter your email and password.');
+  try{
+    await window.smartAuth.signInWithEmailAndPassword(window.smartAuth.auth,email,password);
+    authMessage('Login successful.','ok');
+    setTimeout(closeAuth,500);
+  }catch(e){
+    authMessage(firebaseAuthError(e));
+  }
+}
+
+async function emailSignup(){
+  if(!firebaseReady()) return authMessage('Firebase is not configured yet. Add your Firebase config first.');
+  const email=$('authEmail').value.trim();
+  const password=$('authPassword').value;
+  if(!email || !password) return authMessage('Enter an email and password.');
+  if(password.length<6) return authMessage('Password must contain at least 6 characters.');
+  try{
+    await window.smartAuth.createUserWithEmailAndPassword(window.smartAuth.auth,email,password);
+    authMessage('Account created successfully.','ok');
+    setTimeout(closeAuth,700);
+  }catch(e){
+    authMessage(firebaseAuthError(e));
+  }
+}
+
+async function resetPassword(){
+  if(!firebaseReady()) return authMessage('Firebase is not configured yet. Add your Firebase config first.');
+  const email=$('authEmail').value.trim();
+  if(!email) return authMessage('Enter your email first.');
+  try{
+    await window.smartAuth.sendPasswordResetEmail(window.smartAuth.auth,email);
+    authMessage('Password reset email sent. Check your inbox.','ok');
+  }catch(e){
+    authMessage(firebaseAuthError(e));
+  }
+}
+
+function setupRecaptcha(){
+  if(!firebaseReady() || recaptchaVerifier) return;
+  try{
+    recaptchaVerifier=new window.smartAuth.RecaptchaVerifier(
+      window.smartAuth.auth,
+      'recaptcha-container',
+      {size:'normal'}
+    );
+    recaptchaVerifier.render();
+  }catch(e){
+    console.warn('reCAPTCHA setup:',e);
+  }
+}
+
+async function sendOTP(){
+  if(!firebaseReady()) return authMessage('Firebase is not configured yet. Add your Firebase config first.');
+  const phone=$('authPhone').value.trim();
+  if(!/^\+\d{8,15}$/.test(phone)) return authMessage('Enter mobile number with country code, e.g. +919876543210.');
+  try{
+    setupRecaptcha();
+    if(!recaptchaVerifier) return authMessage('reCAPTCHA could not be initialized. Refresh the page and try again.');
+    confirmationResult=await window.smartAuth.signInWithPhoneNumber(
+      window.smartAuth.auth,phone,recaptchaVerifier
+    );
+    $('otpBox').classList.add('show');
+    authMessage('OTP sent to your mobile.','ok');
+  }catch(e){
+    confirmationResult=null;
+    if(recaptchaVerifier){
+      try{recaptchaVerifier.clear()}catch(_){}
+      recaptchaVerifier=null;
+    }
+    authMessage(firebaseAuthError(e));
+  }
+}
+
+async function verifyOTP(){
+  if(!confirmationResult) return authMessage('Send the OTP first.');
+  const otp=$('authOtp').value.trim();
+  if(!/^\d{6}$/.test(otp)) return authMessage('Enter the 6-digit OTP.');
+  try{
+    await confirmationResult.confirm(otp);
+    authMessage('Mobile login successful.','ok');
+    setTimeout(closeAuth,500);
+  }catch(e){
+    authMessage(firebaseAuthError(e));
+  }
+}
+
+async function logoutUser(){
+  if(!firebaseReady()) return;
+  if(!confirm('Do you want to logout?')) return;
+  try{
+    await window.smartAuth.signOut(window.smartAuth.auth);
+  }catch(e){
+    alert(firebaseAuthError(e));
+  }
+}
+
+function firebaseAuthError(e){
+  const code=e?.code||'';
+  const messages={
+    'auth/invalid-credential':'Incorrect email/password or the account does not exist.',
+    'auth/invalid-email':'Please enter a valid email address.',
+    'auth/email-already-in-use':'This email is already registered. Please login.',
+    'auth/weak-password':'Password must contain at least 6 characters.',
+    'auth/user-disabled':'This account has been disabled.',
+    'auth/too-many-requests':'Too many attempts. Please try again later.',
+    'auth/invalid-verification-code':'The OTP is incorrect.',
+    'auth/code-expired':'The OTP has expired. Send a new OTP.',
+    'auth/invalid-phone-number':'Please enter a valid mobile number with country code.',
+    'auth/quota-exceeded':'SMS quota exceeded. Please try again later.',
+    'auth/operation-not-allowed':'This sign-in method is not enabled in Firebase Authentication.',
+    'auth/captcha-check-failed':'reCAPTCHA verification failed. Please try again.'
+  };
+  return messages[code] || e?.message || 'Authentication failed. Please try again.';
+}
+
 const $=id=>document.getElementById(id), money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
 let cur='0',prev=null,oper=null,reset=false,items=[];
 let upi=localStorage.getItem('smart_upi')||'satyendra6528@ybl';
@@ -154,9 +406,10 @@ function renderBill(){
 }
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function billData(){let sub=items.reduce((s,x)=>s+(+x.qty||0)*(+x.rate||0),0),dr=+$('billDiscount').value||0,d=sub*dr/100,gr=+$('billGst').value||0,g=(sub-d)*gr/100;return{customer:$('customer').value||'Walk-in Customer',mobile:$('mobile').value,invoice:$('invoiceNo').value,date:$('billDate').value,items:JSON.parse(JSON.stringify(items)),subtotal:sub,discount:d,gst:g,total:sub-d+g}}
-function saveBill(){const b=billData();let h=JSON.parse(localStorage.getItem('smart_bills')||'[]');h.unshift({...b,savedAt:new Date().toISOString()});h=h.slice(0,50);localStorage.setItem('smart_bills',JSON.stringify(h));renderHistory();alert('Bill saved successfully.')}
-function renderHistory(){let h=JSON.parse(localStorage.getItem('smart_bills')||'[]'),box=$('history');if(!h.length){box.innerHTML='<div class="empty">No saved bills yet.</div>';return}box.innerHTML=h.map((b,i)=>`<div class="hist"><span><strong>${escapeHtml(b.invoice)}</strong> • ${escapeHtml(b.customer)}<br><span class="muted">${b.date||''}</span></span><strong>${money(b.total)}</strong></div>`).join('')}
-function clearHistory(){if(confirm('Delete all saved bills?')){localStorage.removeItem('smart_bills');renderHistory()}}
+function billHistoryKey(){const u=window.currentFirebaseUser;return u?'smart_bills_'+(u.uid||'user'):'smart_bills_guest'}
+function saveBill(){if(!window.currentFirebaseUser){openAuth();return alert('Please login first to save your bill.');}const b=billData();let h=JSON.parse(localStorage.getItem(billHistoryKey())||'[]');h.unshift({...b,savedAt:new Date().toISOString()});h=h.slice(0,50);localStorage.setItem(billHistoryKey(),JSON.stringify(h));renderHistory();alert('Bill saved successfully.')}
+function renderHistory(){let h=JSON.parse(localStorage.getItem(billHistoryKey())||'[]'),box=$('history');if(!h.length){box.innerHTML='<div class="empty">No saved bills yet.</div>';return}box.innerHTML=h.map((b,i)=>`<div class="hist"><span><strong>${escapeHtml(b.invoice)}</strong> • ${escapeHtml(b.customer)}<br><span class="muted">${b.date||''}</span></span><strong>${money(b.total)}</strong></div>`).join('')}
+function clearHistory(){if(!window.currentFirebaseUser){openAuth();return alert('Please login first.');}if(confirm('Delete all saved bills?')){localStorage.removeItem(billHistoryKey());renderHistory()}}
 function newBill(){if(confirm('Start a new bill?')){$('customer').value='';$('mobile').value='';$('invoiceNo').value=invoice();$('billDate').value=new Date().toISOString().slice(0,10);$('billDiscount').value=0;$('billGst').value=18;items=[];renderBill();clearCalc()}}
 function updateUPI(){upi=$('upiInput').value.trim();$('upiDisplay').textContent=upi;localStorage.setItem('smart_upi',upi);updatePayment()}
 function upiLink(){const b=billData();return `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent('Kushwaha Traders')}&am=${b.total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('Invoice '+b.invoice)}`}
