@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SMART CALCULATOR">
 <link rel="manifest" href="manifest.json">
-<title>SMART CALCULATOR |</title>
+<title>SMART CALCULATOR | Kushwaha Traders</title>
 <style>
 :root{--bg:#eef2f7;--card:#fff;--soft:#f7f9fc;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--amber:#d97706;--shadow:0 18px 45px #0f172a16}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--text)}
@@ -88,7 +88,7 @@ body.dark{--bg:#070b14;--card:#111827;--soft:#182131;--text:#f8fafc;--muted:#94a
   <div class="between"><div><div class="section-title">UPI PAYMENT</div><div class="muted">Dynamic QR for Kushwaha Traders</div></div><span class="muted">UPI READY</span></div>
   <div class="qr"><div id="qrcode"><span class="muted">Enter bill amount</span></div></div>
   <div class="muted">PAYMENT AMOUNT</div><div class="amount">₹<span id="upiAmount">0.00</span></div>
-  <div class="upi">UPI ID: <strong id="upiDisplay">satyendra6528@ybl</strong></div>
+  <div class="upi">UPI ID: <strong id="upiDisplay">YOURUPIID@upi</strong></div>
   <div class="row"><button class="pay" onclick="payNow()">💳 PAY NOW</button></div>
   <button class="share" onclick="sharePayment()">📲 Share Payment Details</button>
   <div class="form-grid" style="text-align:left;margin-top:14px">
@@ -161,7 +161,7 @@ function newBill(){if(confirm('Start a new bill?')){$('customer').value='';$('mo
 function updateUPI(){upi=$('upiInput').value.trim();$('upiDisplay').textContent=upi;localStorage.setItem('smart_upi',upi);updatePayment()}
 function upiLink(){const b=billData();return `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent('Kushwaha Traders')}&am=${b.total.toFixed(2)}&cu=INR&tn=${encodeURIComponent('Invoice '+b.invoice)}`}
 function updatePayment(){let b=billData(),a=b.total;$('upiAmount').textContent=a.toFixed(2);let q=$('qrcode');q.innerHTML='';if(a<=0){q.innerHTML='<span class="muted">Enter bill amount</span>';return}if(typeof QRCode==='undefined'){q.innerHTML='<span class="muted">QR library unavailable</span>';return}new QRCode(q,{text:upiLink(),width:190,height:190,correctLevel:QRCode.CorrectLevel.H})}
-function payNow(){let b=billData();if(b.total<=0)return alert('Enter items and amount first.');if(!upi||upi==='YOURUPIID@upi')return alert('Enter your actual UPI ID first.');location.href=upiLink()}
+function payNow(){let b=billData();if(b.total<=0)return alert('Enter items and amount first.');if(!upi||upi==='satyendra6528@ybl')return alert('Enter your actual UPI ID first.');location.href=upiLink()}
 async function sharePayment(){let b=billData();if(b.total<=0)return alert('Enter bill amount first.');let text=`Payment Request\nKushwaha Traders\nInvoice: ${b.invoice}\nAmount: ${money(b.total)}\nUPI ID: ${upi}`;if(navigator.share)try{await navigator.share({title:'Kushwaha Traders Payment',text,url:upiLink()})}catch(e){}else{await navigator.clipboard?.writeText(text);alert('Payment details copied.')}}
 function shareBill(){let b=billData(),text=`Kushwaha Traders\nInvoice: ${b.invoice}\nCustomer: ${b.customer}\nTotal: ${money(b.total)}\nUPI: ${upi}`;if(navigator.share)navigator.share({title:'Kushwaha Traders Bill',text});else{navigator.clipboard?.writeText(text);alert('Bill details copied.')}}
 function printInvoice(){const b=billData();const rows=b.items.map(x=>`<tr><td>${escapeHtml(x.name)}</td><td>${x.qty}</td><td class="right">${money(x.rate)}</td><td class="right">${money(x.qty*x.rate)}</td></tr>`).join('');const w=window.open('','_blank');if(!w)return alert('Allow pop-ups to print invoice.');w.document.write(`<html><head><title>${b.invoice}</title><style>body{font-family:Arial;padding:30px}.invoice{max-width:800px;margin:auto}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border-bottom:1px solid #ddd;padding:8px;text-align:left}.right{text-align:right}.total{font-size:20px;font-weight:bold;text-align:right;margin-top:15px}</style></head><body><div class="invoice"><h1>Kushwaha Traders</h1><p>Business Invoice</p><hr><p><b>Invoice:</b> ${b.invoice}<br><b>Date:</b> ${b.date}<br><b>Customer:</b> ${escapeHtml(b.customer)}<br><b>Mobile:</b> ${escapeHtml(b.mobile)}</p><table><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Total</th></tr>${rows}</table><p class="total">Subtotal: ${money(b.subtotal)}<br>Discount: ${money(b.discount)}<br>GST: ${money(b.gst)}<br>Grand Total: ${money(b.total)}</p><p>UPI: ${escapeHtml(upi)}</p></div><script>window.onload=()=>{window.print();setTimeout(()=>window.close(),500)}<\/script></body></html>`);w.document.close()}
