@@ -4,14 +4,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SMART CALCULATOR</title>
+
+<title>SMART CALCULATOR - Kushwaha Traders</title>
+
+<!-- QR CODE LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 body{
@@ -26,16 +31,18 @@ body{
 .app{
     width:100%;
     max-width:430px;
-    background:#ffffff;
+    background:white;
     border-radius:28px;
-    box-shadow:0 20px 60px rgba(0,0,0,.15);
     overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.15);
 }
 
+/* HEADER */
+
 .header{
-    padding:22px 24px 15px;
     background:linear-gradient(135deg,#111827,#1e293b);
     color:white;
+    padding:22px;
 }
 
 .logo{
@@ -44,55 +51,34 @@ body{
     letter-spacing:1px;
 }
 
-.tagline{
-    font-size:12px;
-    opacity:.7;
-    margin-top:4px;
+.business{
+    margin-top:5px;
+    font-size:14px;
+    opacity:.8;
 }
+
+/* DISPLAY */
 
 .display{
     background:#111827;
     color:white;
-    padding:20px 24px 25px;
+    padding:20px 24px;
     text-align:right;
 }
 
 .expression{
-    min-height:25px;
     color:#94a3b8;
-    font-size:16px;
-    overflow:hidden;
+    font-size:15px;
+    min-height:20px;
 }
 
 .result{
     font-size:42px;
     font-weight:700;
     margin-top:5px;
-    overflow:hidden;
-    white-space:nowrap;
 }
 
-.quick-tools{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    padding:14px;
-    background:#f8fafc;
-}
-
-.tool{
-    border:none;
-    padding:12px 5px;
-    border-radius:12px;
-    background:#e2e8f0;
-    font-size:12px;
-    font-weight:700;
-    cursor:pointer;
-}
-
-.tool:hover{
-    background:#cbd5e1;
-}
+/* KEYPAD */
 
 .keypad{
     padding:14px;
@@ -101,22 +87,17 @@ body{
     gap:10px;
 }
 
-button{
-    border:none;
-    cursor:pointer;
-    transition:.15s;
-}
-
 .key{
-    height:64px;
-    border-radius:18px;
+    height:62px;
+    border:0;
+    border-radius:17px;
     background:#f1f5f9;
     font-size:21px;
     font-weight:600;
+    cursor:pointer;
 }
 
-.key:active,
-.tool:active{
+.key:active{
     transform:scale(.95);
 }
 
@@ -125,69 +106,138 @@ button{
     color:#1d4ed8;
 }
 
-.equal{
-    background:#2563eb;
-    color:white;
-}
-
 .clear{
     background:#fee2e2;
     color:#dc2626;
 }
 
-.delete{
-    background:#fef3c7;
-    color:#b45309;
+.equal{
+    background:#2563eb;
+    color:white;
 }
 
-.history{
-    padding:15px 20px;
-    border-top:1px solid #e2e8f0;
+/* UPI SECTION */
+
+.upi-box{
+    margin:10px 14px 18px;
+    padding:20px;
+    border-radius:22px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    text-align:center;
 }
 
-.history-title{
-    display:flex;
-    justify-content:space-between;
+.upi-title{
+    font-size:20px;
+    font-weight:800;
+    color:#0f172a;
+}
+
+.upi-business{
     font-size:14px;
-    font-weight:bold;
-    margin-bottom:10px;
+    color:#64748b;
+    margin-top:4px;
 }
 
-.clear-history{
-    color:#2563eb;
+.qr-container{
+    width:210px;
+    height:210px;
+    background:white;
+    margin:18px auto;
+    padding:10px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+#qrcode img,
+#qrcode canvas{
+    max-width:190px;
+    max-height:190px;
+}
+
+.amount-label{
+    font-size:12px;
+    color:#64748b;
+}
+
+.amount{
+    font-size:34px;
+    font-weight:800;
+    color:#16a34a;
+    margin:3px 0 15px;
+}
+
+.upi-id{
+    font-size:13px;
+    color:#475569;
+    margin-bottom:15px;
+    word-break:break-all;
+}
+
+/* BUTTONS */
+
+.pay-btn{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:14px;
+    background:#16a34a;
+    color:white;
+    font-size:17px;
+    font-weight:700;
+    cursor:pointer;
+    margin-bottom:9px;
+}
+
+.pay-btn:active{
+    transform:scale(.98);
+}
+
+.share-btn{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:14px;
+    background:#e2e8f0;
+    color:#0f172a;
+    font-size:15px;
+    font-weight:700;
     cursor:pointer;
 }
 
-.history-list{
-    max-height:130px;
-    overflow:auto;
+/* SETTINGS */
+
+.settings{
+    margin-top:12px;
+    text-align:left;
 }
 
-.history-item{
-    display:flex;
-    justify-content:space-between;
-    padding:7px 0;
-    border-bottom:1px solid #f1f5f9;
-    font-size:13px;
-    color:#475569;
+.settings label{
+    display:block;
+    font-size:12px;
+    color:#64748b;
+    margin-bottom:5px;
+}
+
+.settings input{
+    width:100%;
+    padding:11px;
+    border:1px solid #cbd5e1;
+    border-radius:10px;
+    outline:none;
+    margin-bottom:10px;
 }
 
 .footer{
     text-align:center;
-    padding:12px;
-    color:#94a3b8;
     font-size:11px;
+    color:#94a3b8;
+    padding:10px 0 16px;
 }
 
-@media(max-width:400px){
-    .key{
-        height:58px;
-    }
-
-    .result{
-        font-size:36px;
-    }
-}
 </style>
 </head>
 
@@ -195,82 +245,183 @@ button{
 
 <div class="app">
 
+    <!-- HEADER -->
+
     <div class="header">
-        <div class="logo">SMART CALCULATOR</div>
-        <div class="tagline">Fast • Simple • Smart</div>
+
+        <div class="logo">
+            SMART CALCULATOR
+        </div>
+
+        <div class="business">
+            Kushwaha Traders
+        </div>
+
     </div>
+
+
+    <!-- CALCULATOR DISPLAY -->
 
     <div class="display">
+
         <div class="expression" id="expression"></div>
-        <div class="result" id="display">0</div>
-    </div>
 
-    <!-- SMART TOOLS -->
-    <div class="quick-tools">
-
-        <button class="tool" onclick="gstAdd()">
-            GST +%
-        </button>
-
-        <button class="tool" onclick="gstRemove()">
-            GST -%
-        </button>
-
-        <button class="tool" onclick="discount()">
-            DISCOUNT
-        </button>
-
-        <button class="tool" onclick="quantityRate()">
-            QTY × RATE
-        </button>
+        <div class="result" id="display">
+            0
+        </div>
 
     </div>
 
-    <!-- KEYPAD -->
+
+    <!-- CALCULATOR -->
+
     <div class="keypad">
 
-        <button class="key clear" onclick="clearAll()">AC</button>
-        <button class="key delete" onclick="deleteLast()">⌫</button>
-        <button class="key" onclick="percentage()">%</button>
-        <button class="key operator" onclick="operator('/')">÷</button>
+        <button class="key clear"
+                onclick="clearAll()">AC</button>
 
-        <button class="key" onclick="number('7')">7</button>
-        <button class="key" onclick="number('8')">8</button>
-        <button class="key" onclick="number('9')">9</button>
-        <button class="key operator" onclick="operator('*')">×</button>
+        <button class="key"
+                onclick="deleteLast()">⌫</button>
 
-        <button class="key" onclick="number('4')">4</button>
-        <button class="key" onclick="number('5')">5</button>
-        <button class="key" onclick="number('6')">6</button>
-        <button class="key operator" onclick="operator('-')">−</button>
+        <button class="key"
+                onclick="percentage()">%</button>
 
-        <button class="key" onclick="number('1')">1</button>
-        <button class="key" onclick="number('2')">2</button>
-        <button class="key" onclick="number('3')">3</button>
-        <button class="key operator" onclick="operator('+')">+</button>
+        <button class="key operator"
+                onclick="operator('/')">÷</button>
 
-        <button class="key" onclick="number('00')">00</button>
-        <button class="key" onclick="number('0')">0</button>
-        <button class="key" onclick="decimal()">.</button>
-        <button class="key equal" onclick="calculate()">=</button>
+
+        <button class="key"
+                onclick="number('7')">7</button>
+
+        <button class="key"
+                onclick="number('8')">8</button>
+
+        <button class="key"
+                onclick="number('9')">9</button>
+
+        <button class="key operator"
+                onclick="operator('*')">×</button>
+
+
+        <button class="key"
+                onclick="number('4')">4</button>
+
+        <button class="key"
+                onclick="number('5')">5</button>
+
+        <button class="key"
+                onclick="number('6')">6</button>
+
+        <button class="key operator"
+                onclick="operator('-')">−</button>
+
+
+        <button class="key"
+                onclick="number('1')">1</button>
+
+        <button class="key"
+                onclick="number('2')">2</button>
+
+        <button class="key"
+                onclick="number('3')">3</button>
+
+        <button class="key operator"
+                onclick="operator('+')">+</button>
+
+
+        <button class="key"
+                onclick="number('00')">00</button>
+
+        <button class="key"
+                onclick="number('0')">0</button>
+
+        <button class="key"
+                onclick="decimal()">.</button>
+
+        <button class="key equal"
+                onclick="calculate()">=</button>
 
     </div>
 
-    <!-- HISTORY -->
-    <div class="history">
 
-        <div class="history-title">
-            <span>Calculation History</span>
-            <span class="clear-history" onclick="clearHistory()">
-                Clear
-            </span>
+    <!-- UPI PAYMENT -->
+
+    <div class="upi-box">
+
+        <div class="upi-title">
+            PAY WITH UPI
         </div>
 
-        <div class="history-list" id="historyList">
-            No calculations yet.
+        <div class="upi-business">
+            Kushwaha Traders
+        </div>
+
+
+        <!-- QR -->
+
+        <div class="qr-container">
+
+            <div id="qrcode"></div>
+
+        </div>
+
+
+        <div class="amount-label">
+            PAYMENT AMOUNT
+        </div>
+
+        <div class="amount">
+            ₹ <span id="upiAmount">0.00</span>
+        </div>
+
+
+        <div class="upi-id">
+            UPI ID:
+            <strong id="upiDisplay">
+                YOURUPIID@upi
+            </strong>
+        </div>
+
+
+        <!-- PAY NOW -->
+
+        <button class="pay-btn"
+                onclick="payNow()">
+
+            💳 PAY NOW
+
+        </button>
+
+
+        <!-- SHARE -->
+
+        <button class="share-btn"
+                onclick="sharePayment()">
+
+            📤 SHARE PAYMENT
+
+        </button>
+
+
+        <!-- UPI SETTINGS -->
+
+        <div class="settings">
+
+            <label>
+                Your UPI ID
+            </label>
+
+            <input
+                type="text"
+                id="upiInput"
+                value="YOURUPIID@upi"
+                placeholder="example@upi"
+                oninput="updateUPI()">
+
         </div>
 
     </div>
+
 
     <div class="footer">
         SMART CALCULATOR © 2026
@@ -281,19 +432,31 @@ button{
 
 <script>
 
+/* =====================================
+   CALCULATOR
+===================================== */
+
 let current = "0";
 let previous = null;
 let currentOperator = null;
 let shouldReset = false;
 
-const display = document.getElementById("display");
-const expression = document.getElementById("expression");
+
+const display =
+    document.getElementById("display");
+
+const expression =
+    document.getElementById("expression");
+
 
 function updateDisplay(){
 
     display.textContent = current;
 
+    updatePayment();
+
 }
+
 
 function number(value){
 
@@ -312,18 +475,15 @@ function number(value){
 
 }
 
+
 function decimal(){
 
     if(shouldReset){
 
         current = "0.";
         shouldReset = false;
-        updateDisplay();
-        return;
 
-    }
-
-    if(!current.includes(".")){
+    }else if(!current.includes(".")){
 
         current += ".";
 
@@ -332,6 +492,7 @@ function decimal(){
     updateDisplay();
 
 }
+
 
 function operator(op){
 
@@ -342,15 +503,18 @@ function operator(op){
     }
 
     previous = parseFloat(current);
+
     currentOperator = op;
+
     shouldReset = true;
 
     expression.textContent =
-        formatNumber(previous) + " " + operatorSymbol(op);
+        previous + " " + symbol(op);
 
 }
 
-function operatorSymbol(op){
+
+function symbol(op){
 
     if(op === "+") return "+";
     if(op === "-") return "−";
@@ -359,72 +523,116 @@ function operatorSymbol(op){
 
 }
 
+
 function calculate(){
 
-    if(previous === null || currentOperator === null)
+    if(previous === null ||
+       currentOperator === null){
+
         return;
 
-    let second = parseFloat(current);
+    }
+
+    let second =
+        parseFloat(current);
 
     let result;
+
 
     switch(currentOperator){
 
         case "+":
-            result = previous + second;
+
+            result =
+                previous + second;
+
             break;
+
 
         case "-":
-            result = previous - second;
+
+            result =
+                previous - second;
+
             break;
 
+
         case "*":
-            result = previous * second;
+
+            result =
+                previous * second;
+
             break;
+
 
         case "/":
 
             if(second === 0){
 
                 current = "Error";
+
                 updateDisplay();
-                resetCalculation();
+
+                reset();
+
                 return;
 
             }
 
-            result = previous / second;
+            result =
+                previous / second;
+
             break;
 
     }
 
-    let oldExpression =
-        formatNumber(previous) +
-        " " +
-        operatorSymbol(currentOperator) +
-        " " +
-        formatNumber(second);
-
-    current = formatNumber(result);
 
     expression.textContent =
-        oldExpression + " =";
+        previous +
+        " " +
+        symbol(currentOperator) +
+        " " +
+        second +
+        " =";
 
-    addHistory(oldExpression, current);
 
-    previous = null;
-    currentOperator = null;
-    shouldReset = true;
+    current =
+        formatNumber(result);
+
+
+    reset();
 
     updateDisplay();
 
 }
 
+
+function formatNumber(num){
+
+    return Number(
+        parseFloat(num.toFixed(10))
+    ).toString();
+
+}
+
+
+function reset(){
+
+    previous = null;
+    currentOperator = null;
+    shouldReset = true;
+
+}
+
+
 function clearAll(){
 
     current = "0";
+
     previous = null;
+
     currentOperator = null;
+
     shouldReset = false;
 
     expression.textContent = "";
@@ -433,19 +641,13 @@ function clearAll(){
 
 }
 
-function resetCalculation(){
-
-    previous = null;
-    currentOperator = null;
-    shouldReset = true;
-
-}
 
 function deleteLast(){
 
     if(current.length > 1){
 
-        current = current.slice(0,-1);
+        current =
+            current.slice(0,-1);
 
     }else{
 
@@ -457,238 +659,345 @@ function deleteLast(){
 
 }
 
+
 function percentage(){
 
-    let value = parseFloat(current);
+    let value =
+        parseFloat(current);
 
-    current = formatNumber(value / 100);
-
-    expression.textContent = value + "%";
-
-    updateDisplay();
-
-}
-
-function gstAdd(){
-
-    let value = parseFloat(current);
-
-    let rate = prompt("Enter GST %", "18");
-
-    if(rate === null) return;
-
-    rate = parseFloat(rate);
-
-    if(isNaN(rate)) return;
-
-    let gst = value * rate / 100;
-    let total = value + gst;
-
-    expression.textContent =
-        value + " + GST " + rate + "%";
-
-    current = formatNumber(total);
-
-    addHistory(
-        value + " + GST " + rate + "%",
-        current
-    );
+    current =
+        formatNumber(value / 100);
 
     updateDisplay();
 
 }
 
-function gstRemove(){
 
-    let value = parseFloat(current);
+/* =====================================
+   UPI PAYMENT
+===================================== */
 
-    let rate = prompt("Enter GST %", "18");
+let upiID =
+    "YOURUPIID@upi";
 
-    if(rate === null) return;
+let merchantName =
+    "Kushwaha Traders";
 
-    rate = parseFloat(rate);
 
-    if(isNaN(rate)) return;
+/*
+   UPDATE UPI
+*/
 
-    let original = value / (1 + rate/100);
-    let gst = value - original;
+function updateUPI(){
 
-    expression.textContent =
-        value + " − GST " + rate + "%";
+    upiID =
+        document.getElementById(
+            "upiInput"
+        ).value.trim();
 
-    current = formatNumber(original);
+    document.getElementById(
+        "upiDisplay"
+    ).textContent = upiID;
 
-    addHistory(
-        value + " − GST " + rate + "%",
-        current
-    );
-
-    updateDisplay();
-
-}
-
-function discount(){
-
-    let value = parseFloat(current);
-
-    let rate = prompt("Enter Discount %", "10");
-
-    if(rate === null) return;
-
-    rate = parseFloat(rate);
-
-    if(isNaN(rate)) return;
-
-    let discountAmount =
-        value * rate / 100;
-
-    let total =
-        value - discountAmount;
-
-    expression.textContent =
-        value + " − Discount " + rate + "%";
-
-    current = formatNumber(total);
-
-    addHistory(
-        value + " − Discount " + rate + "%",
-        current
-    );
-
-    updateDisplay();
+    updatePayment();
 
 }
 
-function quantityRate(){
 
-    let quantity =
-        prompt("Enter Quantity", "1");
+/*
+   CREATE UPI PAYMENT LINK
+*/
 
-    if(quantity === null) return;
+function createUPILink(){
 
-    let rate =
-        prompt("Enter Rate", "100");
+    let amount =
+        parseFloat(current);
 
-    if(rate === null) return;
+    if(isNaN(amount) || amount <= 0){
 
-    quantity = parseFloat(quantity);
-    rate = parseFloat(rate);
+        return "";
 
-    if(isNaN(quantity) || isNaN(rate))
+    }
+
+
+    let upiLink =
+        "upi://pay" +
+
+        "?pa=" +
+        encodeURIComponent(upiID) +
+
+        "&pn=" +
+        encodeURIComponent(merchantName) +
+
+        "&am=" +
+        amount.toFixed(2) +
+
+        "&cu=INR" +
+
+        "&tn=" +
+        encodeURIComponent(
+            "Payment to Kushwaha Traders"
+        );
+
+
+    return upiLink;
+
+}
+
+
+/*
+   UPDATE QR
+*/
+
+function updatePayment(){
+
+    let amount =
+        parseFloat(current);
+
+
+    if(isNaN(amount) ||
+       amount < 0){
+
+        amount = 0;
+
+    }
+
+
+    document.getElementById(
+        "upiAmount"
+    ).textContent =
+        amount.toFixed(2);
+
+
+    /*
+       CLEAR OLD QR
+    */
+
+    let qr =
+        document.getElementById(
+            "qrcode"
+        );
+
+    qr.innerHTML = "";
+
+
+    /*
+       DON'T CREATE QR FOR ZERO
+    */
+
+    if(amount <= 0){
+
+        qr.innerHTML =
+            "<span style='font-size:12px;color:#94a3b8'>" +
+            "Enter amount" +
+            "</span>";
+
         return;
 
-    let total = quantity * rate;
-
-    expression.textContent =
-        quantity + " × " + rate;
-
-    current = formatNumber(total);
-
-    addHistory(
-        quantity + " × " + rate,
-        current
-    );
-
-    updateDisplay();
-
-}
-
-function formatNumber(number){
-
-    if(!isFinite(number))
-        return "Error";
-
-    return Number(
-        parseFloat(number.toFixed(10))
-    ).toString();
-
-}
-
-function addHistory(exp,result){
-
-    let list =
-        document.getElementById("historyList");
-
-    if(list.textContent ===
-       "No calculations yet."){
-
-        list.innerHTML = "";
-
     }
 
-    let item =
-        document.createElement("div");
 
-    item.className =
-        "history-item";
+    /*
+       CREATE NEW UPI QR
+    */
 
-    item.innerHTML =
-        `<span>${exp}</span>
-         <strong>${result}</strong>`;
+    let link =
+        createUPILink();
 
-    list.prepend(item);
 
-}
+    new QRCode(qr,{
 
-function clearHistory(){
+        text:link,
 
-    document.getElementById("historyList").innerHTML =
-        "No calculations yet.";
+        width:190,
+
+        height:190,
+
+        correctLevel:
+            QRCode.CorrectLevel.H
+
+    });
 
 }
 
 
-/* KEYBOARD SUPPORT */
+/*
+   PAY NOW
+*/
 
-document.addEventListener("keydown", function(e){
+function payNow(){
 
-    if(e.key >= "0" && e.key <= "9"){
+    let amount =
+        parseFloat(current);
 
-        number(e.key);
 
-    }
+    if(isNaN(amount) ||
+       amount <= 0){
 
-    else if(e.key === "."){
+        alert(
+            "Please enter a payment amount first."
+        );
 
-        decimal();
-
-    }
-
-    else if(
-        ["+","-","*","/"].includes(e.key)
-    ){
-
-        operator(e.key);
+        return;
 
     }
 
-    else if(e.key === "Enter" || e.key === "="){
 
-        calculate();
+    let link =
+        createUPILink();
+
+
+    /*
+       Open UPI application
+    */
+
+    window.location.href = link;
+
+}
+
+
+/*
+   SHARE PAYMENT
+*/
+
+async function sharePayment(){
+
+    let amount =
+        parseFloat(current);
+
+
+    if(isNaN(amount) ||
+       amount <= 0){
+
+        alert(
+            "Please enter an amount first."
+        );
+
+        return;
 
     }
 
-    else if(e.key === "Backspace"){
 
-        deleteLast();
+    let message =
+        "Payment Request\n\n" +
+
+        "Business: " +
+        merchantName +
+
+        "\nAmount: ₹" +
+        amount.toFixed(2) +
+
+        "\nUPI ID: " +
+        upiID;
+
+
+    if(navigator.share){
+
+        try{
+
+            await navigator.share({
+
+                title:
+                    "Payment to Kushwaha Traders",
+
+                text:
+                    message,
+
+                url:
+                    createUPILink()
+
+            });
+
+        }catch(error){
+
+            console.log(error);
+
+        }
+
+    }else{
+
+        await navigator.clipboard.writeText(
+            message
+        );
+
+        alert(
+            "Payment details copied."
+        );
 
     }
 
-    else if(e.key === "Escape"){
+}
 
-        clearAll();
+
+/*
+   INITIALIZE
+*/
+
+updatePayment();
+
+
+/* =====================================
+   KEYBOARD
+===================================== */
+
+document.addEventListener(
+    "keydown",
+    function(e){
+
+        if(e.key >= "0" &&
+           e.key <= "9"){
+
+            number(e.key);
+
+        }
+
+        else if(e.key === "."){
+
+            decimal();
+
+        }
+
+        else if(
+            ["+","-","*","/"].includes(e.key)
+        ){
+
+            operator(e.key);
+
+        }
+
+        else if(
+            e.key === "Enter" ||
+            e.key === "="
+        ){
+
+            calculate();
+
+        }
+
+        else if(
+            e.key === "Backspace"
+        ){
+
+            deleteLast();
+
+        }
+
+        else if(
+            e.key === "Escape"
+        ){
+
+            clearAll();
+
+        }
+
+        else if(e.key === "%"){
+
+            percentage();
+
+        }
 
     }
-
-    else if(e.key === "%"){
-
-        percentage();
-
-    }
-
-});
-
-updateDisplay();
+);
 
 </script>
 
