@@ -1,0 +1,697 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMART CALCULATOR</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#eef2ff,#f8fafc);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.app{
+    width:100%;
+    max-width:430px;
+    background:#ffffff;
+    border-radius:28px;
+    box-shadow:0 20px 60px rgba(0,0,0,.15);
+    overflow:hidden;
+}
+
+.header{
+    padding:22px 24px 15px;
+    background:linear-gradient(135deg,#111827,#1e293b);
+    color:white;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.tagline{
+    font-size:12px;
+    opacity:.7;
+    margin-top:4px;
+}
+
+.display{
+    background:#111827;
+    color:white;
+    padding:20px 24px 25px;
+    text-align:right;
+}
+
+.expression{
+    min-height:25px;
+    color:#94a3b8;
+    font-size:16px;
+    overflow:hidden;
+}
+
+.result{
+    font-size:42px;
+    font-weight:700;
+    margin-top:5px;
+    overflow:hidden;
+    white-space:nowrap;
+}
+
+.quick-tools{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    padding:14px;
+    background:#f8fafc;
+}
+
+.tool{
+    border:none;
+    padding:12px 5px;
+    border-radius:12px;
+    background:#e2e8f0;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.tool:hover{
+    background:#cbd5e1;
+}
+
+.keypad{
+    padding:14px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.key{
+    height:64px;
+    border-radius:18px;
+    background:#f1f5f9;
+    font-size:21px;
+    font-weight:600;
+}
+
+.key:active,
+.tool:active{
+    transform:scale(.95);
+}
+
+.operator{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.equal{
+    background:#2563eb;
+    color:white;
+}
+
+.clear{
+    background:#fee2e2;
+    color:#dc2626;
+}
+
+.delete{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.history{
+    padding:15px 20px;
+    border-top:1px solid #e2e8f0;
+}
+
+.history-title{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.clear-history{
+    color:#2563eb;
+    cursor:pointer;
+}
+
+.history-list{
+    max-height:130px;
+    overflow:auto;
+}
+
+.history-item{
+    display:flex;
+    justify-content:space-between;
+    padding:7px 0;
+    border-bottom:1px solid #f1f5f9;
+    font-size:13px;
+    color:#475569;
+}
+
+.footer{
+    text-align:center;
+    padding:12px;
+    color:#94a3b8;
+    font-size:11px;
+}
+
+@media(max-width:400px){
+    .key{
+        height:58px;
+    }
+
+    .result{
+        font-size:36px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <div class="logo">SMART CALCULATOR</div>
+        <div class="tagline">Fast • Simple • Smart</div>
+    </div>
+
+    <div class="display">
+        <div class="expression" id="expression"></div>
+        <div class="result" id="display">0</div>
+    </div>
+
+    <!-- SMART TOOLS -->
+    <div class="quick-tools">
+
+        <button class="tool" onclick="gstAdd()">
+            GST +%
+        </button>
+
+        <button class="tool" onclick="gstRemove()">
+            GST -%
+        </button>
+
+        <button class="tool" onclick="discount()">
+            DISCOUNT
+        </button>
+
+        <button class="tool" onclick="quantityRate()">
+            QTY × RATE
+        </button>
+
+    </div>
+
+    <!-- KEYPAD -->
+    <div class="keypad">
+
+        <button class="key clear" onclick="clearAll()">AC</button>
+        <button class="key delete" onclick="deleteLast()">⌫</button>
+        <button class="key" onclick="percentage()">%</button>
+        <button class="key operator" onclick="operator('/')">÷</button>
+
+        <button class="key" onclick="number('7')">7</button>
+        <button class="key" onclick="number('8')">8</button>
+        <button class="key" onclick="number('9')">9</button>
+        <button class="key operator" onclick="operator('*')">×</button>
+
+        <button class="key" onclick="number('4')">4</button>
+        <button class="key" onclick="number('5')">5</button>
+        <button class="key" onclick="number('6')">6</button>
+        <button class="key operator" onclick="operator('-')">−</button>
+
+        <button class="key" onclick="number('1')">1</button>
+        <button class="key" onclick="number('2')">2</button>
+        <button class="key" onclick="number('3')">3</button>
+        <button class="key operator" onclick="operator('+')">+</button>
+
+        <button class="key" onclick="number('00')">00</button>
+        <button class="key" onclick="number('0')">0</button>
+        <button class="key" onclick="decimal()">.</button>
+        <button class="key equal" onclick="calculate()">=</button>
+
+    </div>
+
+    <!-- HISTORY -->
+    <div class="history">
+
+        <div class="history-title">
+            <span>Calculation History</span>
+            <span class="clear-history" onclick="clearHistory()">
+                Clear
+            </span>
+        </div>
+
+        <div class="history-list" id="historyList">
+            No calculations yet.
+        </div>
+
+    </div>
+
+    <div class="footer">
+        SMART CALCULATOR © 2026
+    </div>
+
+</div>
+
+
+<script>
+
+let current = "0";
+let previous = null;
+let currentOperator = null;
+let shouldReset = false;
+
+const display = document.getElementById("display");
+const expression = document.getElementById("expression");
+
+function updateDisplay(){
+
+    display.textContent = current;
+
+}
+
+function number(value){
+
+    if(current === "0" || shouldReset){
+
+        current = value;
+        shouldReset = false;
+
+    }else{
+
+        current += value;
+
+    }
+
+    updateDisplay();
+
+}
+
+function decimal(){
+
+    if(shouldReset){
+
+        current = "0.";
+        shouldReset = false;
+        updateDisplay();
+        return;
+
+    }
+
+    if(!current.includes(".")){
+
+        current += ".";
+
+    }
+
+    updateDisplay();
+
+}
+
+function operator(op){
+
+    if(currentOperator && !shouldReset){
+
+        calculate();
+
+    }
+
+    previous = parseFloat(current);
+    currentOperator = op;
+    shouldReset = true;
+
+    expression.textContent =
+        formatNumber(previous) + " " + operatorSymbol(op);
+
+}
+
+function operatorSymbol(op){
+
+    if(op === "+") return "+";
+    if(op === "-") return "−";
+    if(op === "*") return "×";
+    if(op === "/") return "÷";
+
+}
+
+function calculate(){
+
+    if(previous === null || currentOperator === null)
+        return;
+
+    let second = parseFloat(current);
+
+    let result;
+
+    switch(currentOperator){
+
+        case "+":
+            result = previous + second;
+            break;
+
+        case "-":
+            result = previous - second;
+            break;
+
+        case "*":
+            result = previous * second;
+            break;
+
+        case "/":
+
+            if(second === 0){
+
+                current = "Error";
+                updateDisplay();
+                resetCalculation();
+                return;
+
+            }
+
+            result = previous / second;
+            break;
+
+    }
+
+    let oldExpression =
+        formatNumber(previous) +
+        " " +
+        operatorSymbol(currentOperator) +
+        " " +
+        formatNumber(second);
+
+    current = formatNumber(result);
+
+    expression.textContent =
+        oldExpression + " =";
+
+    addHistory(oldExpression, current);
+
+    previous = null;
+    currentOperator = null;
+    shouldReset = true;
+
+    updateDisplay();
+
+}
+
+function clearAll(){
+
+    current = "0";
+    previous = null;
+    currentOperator = null;
+    shouldReset = false;
+
+    expression.textContent = "";
+
+    updateDisplay();
+
+}
+
+function resetCalculation(){
+
+    previous = null;
+    currentOperator = null;
+    shouldReset = true;
+
+}
+
+function deleteLast(){
+
+    if(current.length > 1){
+
+        current = current.slice(0,-1);
+
+    }else{
+
+        current = "0";
+
+    }
+
+    updateDisplay();
+
+}
+
+function percentage(){
+
+    let value = parseFloat(current);
+
+    current = formatNumber(value / 100);
+
+    expression.textContent = value + "%";
+
+    updateDisplay();
+
+}
+
+function gstAdd(){
+
+    let value = parseFloat(current);
+
+    let rate = prompt("Enter GST %", "18");
+
+    if(rate === null) return;
+
+    rate = parseFloat(rate);
+
+    if(isNaN(rate)) return;
+
+    let gst = value * rate / 100;
+    let total = value + gst;
+
+    expression.textContent =
+        value + " + GST " + rate + "%";
+
+    current = formatNumber(total);
+
+    addHistory(
+        value + " + GST " + rate + "%",
+        current
+    );
+
+    updateDisplay();
+
+}
+
+function gstRemove(){
+
+    let value = parseFloat(current);
+
+    let rate = prompt("Enter GST %", "18");
+
+    if(rate === null) return;
+
+    rate = parseFloat(rate);
+
+    if(isNaN(rate)) return;
+
+    let original = value / (1 + rate/100);
+    let gst = value - original;
+
+    expression.textContent =
+        value + " − GST " + rate + "%";
+
+    current = formatNumber(original);
+
+    addHistory(
+        value + " − GST " + rate + "%",
+        current
+    );
+
+    updateDisplay();
+
+}
+
+function discount(){
+
+    let value = parseFloat(current);
+
+    let rate = prompt("Enter Discount %", "10");
+
+    if(rate === null) return;
+
+    rate = parseFloat(rate);
+
+    if(isNaN(rate)) return;
+
+    let discountAmount =
+        value * rate / 100;
+
+    let total =
+        value - discountAmount;
+
+    expression.textContent =
+        value + " − Discount " + rate + "%";
+
+    current = formatNumber(total);
+
+    addHistory(
+        value + " − Discount " + rate + "%",
+        current
+    );
+
+    updateDisplay();
+
+}
+
+function quantityRate(){
+
+    let quantity =
+        prompt("Enter Quantity", "1");
+
+    if(quantity === null) return;
+
+    let rate =
+        prompt("Enter Rate", "100");
+
+    if(rate === null) return;
+
+    quantity = parseFloat(quantity);
+    rate = parseFloat(rate);
+
+    if(isNaN(quantity) || isNaN(rate))
+        return;
+
+    let total = quantity * rate;
+
+    expression.textContent =
+        quantity + " × " + rate;
+
+    current = formatNumber(total);
+
+    addHistory(
+        quantity + " × " + rate,
+        current
+    );
+
+    updateDisplay();
+
+}
+
+function formatNumber(number){
+
+    if(!isFinite(number))
+        return "Error";
+
+    return Number(
+        parseFloat(number.toFixed(10))
+    ).toString();
+
+}
+
+function addHistory(exp,result){
+
+    let list =
+        document.getElementById("historyList");
+
+    if(list.textContent ===
+       "No calculations yet."){
+
+        list.innerHTML = "";
+
+    }
+
+    let item =
+        document.createElement("div");
+
+    item.className =
+        "history-item";
+
+    item.innerHTML =
+        `<span>${exp}</span>
+         <strong>${result}</strong>`;
+
+    list.prepend(item);
+
+}
+
+function clearHistory(){
+
+    document.getElementById("historyList").innerHTML =
+        "No calculations yet.";
+
+}
+
+
+/* KEYBOARD SUPPORT */
+
+document.addEventListener("keydown", function(e){
+
+    if(e.key >= "0" && e.key <= "9"){
+
+        number(e.key);
+
+    }
+
+    else if(e.key === "."){
+
+        decimal();
+
+    }
+
+    else if(
+        ["+","-","*","/"].includes(e.key)
+    ){
+
+        operator(e.key);
+
+    }
+
+    else if(e.key === "Enter" || e.key === "="){
+
+        calculate();
+
+    }
+
+    else if(e.key === "Backspace"){
+
+        deleteLast();
+
+    }
+
+    else if(e.key === "Escape"){
+
+        clearAll();
+
+    }
+
+    else if(e.key === "%"){
+
+        percentage();
+
+    }
+
+});
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>
+```
