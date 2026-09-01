@@ -1,781 +1,159 @@
 <!doctype html>
 
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="en"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
-<meta name="theme-color" content="#0b1220">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SMART CALCULATOR">
+<meta name="theme-color" content="#0b1220"> <meta name="apple-mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <meta name="apple-mobile-web-app-title" content="SMART CALCULATOR">
 
 <link rel="manifest" href="manifest.json">
 
 <title>SMART CALCULATOR | Smart Calculation, Smarter Business</title>
 
-<style>
-:root{
-  --bg:#eef2f7;
-  --card:#fff;
-  --soft:#f7f9fc;
-  --text:#0f172a;
-  --muted:#64748b;
-  --line:#e2e8f0;
-  --blue:#2563eb;
-  --green:#16a34a;
-  --red:#dc2626;
-  --amber:#d97706;
-  --shadow:0 18px 45px #0f172a16
-}
-
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  min-height:100%;
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;
-  color:var(--text)
-}
-
-body{
-  background:radial-gradient(circle at 0 0,#dbeafe 0,transparent 32%),var(--bg);
-  padding:12px
-}
-
-button,input,select{font:inherit}
-button{cursor:pointer}
-
-.app{
-  max-width:1250px;
-  margin:auto
-}
-
-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:14px
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:11px
-}
-
-.brand-icon{
-  width:48px;
-  height:48px;
-  border-radius:15px;
-  background:linear-gradient(135deg,#2563eb,#1d4ed8);
-  color:white;
-  display:grid;
-  place-items:center;
-  font-weight:900;
-  font-size:21px;
-  box-shadow:0 8px 20px #2563eb30
-}
-
-h1{
-  font-size:21px;
-  margin:0;
-  font-weight:900
-}
-
-header p{
-  margin:3px 0 0;
-  color:var(--muted);
-  font-size:12px
-}
-
-.head-actions{
-  display:flex;
-  gap:7px
-}
-
-.icon{
-  width:42px;
-  height:42px;
-  border:1px solid var(--line);
-  background:var(--card);
-  border-radius:13px
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);
-  gap:16px
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:24px;
-  box-shadow:var(--shadow);
-  overflow:hidden
-}
-
-.pad{padding:16px}
-
-.display{
-  background:linear-gradient(145deg,#0b1220,#182235);
-  color:white;
-  border-radius:20px;
-  padding:20px;
-  min-height:145px;
-  display:flex;
-  flex-direction:column;
-  justify-content:end;
-  text-align:right
-}
-
-.expr{
-  color:#94a3b8;
-  font-size:13px;
-  min-height:20px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
-}
-
-.result{
-  font-size:clamp(36px,8vw,58px);
-  font-weight:850;
-  letter-spacing:-2px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
-}
-
-.keys{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:9px;
-  margin-top:12px
-}
-
-.key{
-  min-height:64px;
-  border:0;
-  border-radius:17px;
-  background:#f1f5f9;
-  font-size:21px;
-  font-weight:750
-}
-
-.key:active,
-.btn:active,
-.icon:active{
-  transform:scale(.96)
-}
-
-.op{
-  background:#dbeafe;
-  color:#1d4ed8
-}
-
-.eq{
-  background:linear-gradient(135deg,#2563eb,#1d4ed8);
-  color:white
-}
-
-.danger{
-  background:#fee2e2;
-  color:#dc2626
-}
-
-.amber{
-  background:#fef3c7;
-  color:#b45309
-}
-
-.tools{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-top:12px
-}
-
-.btn{
-  border:1px solid var(--line);
-  background:var(--soft);
-  border-radius:13px;
-  padding:11px 6px;
-  font-size:12px;
-  font-weight:800
-}
-
-.primary{
-  background:var(--blue);
-  color:#fff;
-  border-color:var(--blue)
-}
-
-.green{
-  background:var(--green);
-  color:white;
-  border-color:var(--green)
-}
-
-.logout{
-  background:#fee2e2;
-  color:#dc2626;
-  border-color:#fecaca
-}
-
-.section-title{
-  font-weight:900;
-  font-size:18px
-}
-
-.muted{
-  color:var(--muted);
-  font-size:12px
-}
-
-.row{
-  display:flex;
-  gap:8px;
-  align-items:center
-}
-
-.between{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-top:12px
-}
-
-.field label{
-  display:block;
-  color:var(--muted);
-  font-size:10px;
-  font-weight:750;
-  margin-bottom:4px
-}
-
-.field input,
-.field select{
-  width:100%;
-  padding:11px;
-  border:1px solid var(--line);
-  border-radius:11px;
-  outline:none;
-  background:#fff
-}
-
-.field.full{
-  grid-column:1/-1
-}
-
-.items{
-  margin-top:13px;
-  border:1px solid var(--line);
-  border-radius:15px;
-  overflow:hidden
-}
-
-.item-head,
-.item{
-  display:grid;
-  grid-template-columns:1.5fr .6fr .8fr .8fr 32px;
-  gap:7px;
-  align-items:center;
-  padding:9px;
-  font-size:11px
-}
-
-.item-head{
-  background:var(--soft);
-  color:var(--muted);
-  font-weight:800
-}
-
-.item{
-  border-top:1px solid var(--line)
-}
-
-.item input{
-  width:100%;
-  padding:8px;
-  border:1px solid var(--line);
-  border-radius:8px
-}
-
-.remove{
-  width:30px;
-  height:30px;
-  border:0;
-  border-radius:8px;
-  background:#fee2e2;
-  color:#dc2626
-}
-
-.summary{
-  margin-top:12px;
-  background:var(--soft);
-  border-radius:15px;
-  padding:13px
-}
-
-.sumline{
-  display:flex;
-  justify-content:space-between;
-  padding:4px 0;
-  font-size:13px
-}
-
-.grand{
-  font-size:20px;
-  font-weight:900;
-  border-top:1px solid var(--line);
-  margin-top:6px;
-  padding-top:9px
-}
-
-.payment{text-align:center}
-
-.qr{
-  width:min(230px,62vw);
-  aspect-ratio:1;
-  background:#fff;
-  border-radius:18px;
-  padding:12px;
-  margin:18px auto;
-  display:grid;
-  place-items:center;
-  box-shadow:0 8px 25px #0f172a12
-}
-
-.qr img,
-.qr canvas{
-  max-width:200px!important;
-  max-height:200px!important
-}
-
-.amount{
-  font-size:34px;
-  color:var(--green);
-  font-weight:900
-}
-
-.upi{
-  font-size:11px;
-  color:var(--muted);
-  word-break:break-all;
-  margin:8px 0 12px
-}
-
-.pay{
-  width:100%;
-  padding:14px;
-  border:0;
-  border-radius:14px;
-  background:var(--green);
-  color:white;
-  font-weight:900
-}
-
-.share{
-  width:100%;
-  padding:12px;
-  border:0;
-  border-radius:14px;
-  background:#e2e8f0;
-  margin-top:8px;
-  font-weight:800
-}
-
-.history{
-  margin-top:16px;
-  padding:16px
-}
-
-.history-list{
-  max-height:240px;
-  overflow:auto;
-  margin-top:9px
-}
-
-.hist{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  border-bottom:1px solid var(--line);
-  padding:10px 0;
-  font-size:12px
-}
-
-.hist strong{
-  white-space:nowrap
-}
-
-.empty{
-  color:var(--muted);
-  font-size:12px;
-  padding:10px 0
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:#0f172a99;
-  display:none;
-  place-items:center;
-  padding:15px;
-  z-index:10;
-  backdrop-filter:blur(5px)
-}
-
-.modal.show{display:grid}
-
-.modal-card{
-  width:min(520px,100%);
-  background:var(--card);
-  border-radius:22px;
-  padding:18px;
-  max-height:90vh;
-  overflow:auto
-}
-
-.close{
-  border:0;
-  background:#f1f5f9;
-  border-radius:9px;
-  width:35px;
-  height:35px
-}
-
-.footer{
-  text-align:center;
-  padding:20px;
-  color:var(--muted);
-  font-size:11px
-}
-
-.tool-output{
-  margin-top:14px;
-  background:var(--soft);
-  border-radius:12px;
-  padding:12px;
-  font-weight:800
-}
-
-body.dark{
-  --bg:#070b14;
-  --card:#111827;
-  --soft:#182131;
-  --text:#f8fafc;
-  --muted:#94a3b8;
-  --line:#263244
-}
-
-body.dark .icon,
-body.dark .field input,
-body.dark .field select{
-  background:#111827;
-  color:#fff;
-  border-color:#263244
-}
-
-body.dark .key{
-  background:#1e293b;
-  color:#fff
-}
-
-body.dark .op{
-  background:#17315a;
-  color:#93c5fd
-}
-
-body.dark .danger{
-  background:#4c1d1d;
-  color:#fecaca
-}
-
-body.dark .amber{
-  background:#4a3510;
-  color:#fde68a
-}
-
-/* LOGIN */
-
-.login-gate{
-  position:fixed;
-  inset:0;
-  z-index:999;
-  background:linear-gradient(135deg,#0b1220,#1e3a8a);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:20px
-}
-
-.login-gate.show{
-  display:flex
-}
-
-.gate-card{
-  width:min(430px,100%);
-  background:#fff;
-  color:#0f172a;
-  border-radius:28px;
-  padding:28px;
-  box-shadow:0 25px 70px #0005;
-  text-align:center
-}
-
-.gate-logo{
-  width:72px;
-  height:72px;
-  border-radius:20px;
-  background:#2563eb;
-  color:#fff;
-  display:grid;
-  place-items:center;
-  font-size:34px;
-  font-weight:900;
-  margin:0 auto 14px
-}
-
-.gate-card h2{
-  margin:0
-}
-
-.gate-card p{
-  color:#64748b;
-  font-size:13px;
-  line-height:1.5
-}
-
-.gate-btn{
-  display:block;
-  width:100%;
-  padding:14px;
-  border:0;
-  border-radius:13px;
-  background:#2563eb;
-  color:#fff;
-  font-weight:900;
-  font-size:15px;
-  margin-top:14px
-}
-
-.gate-btn.secondary{
-  background:#16a34a
-}
-
-.gate-btn.outline{
-  background:#f1f5f9;
-  color:#0f172a
-}
-
-.gate-msg{
-  min-height:18px;
-  color:#dc2626;
-  font-size:12px;
-  font-weight:700;
-  margin-top:10px
-}
-
-.auth-form{
-  margin-top:15px;
-  text-align:left
-}
-
-.auth-form input{
-  width:100%;
-  padding:13px;
-  border:1px solid #dbe3ee;
-  border-radius:12px;
-  margin-bottom:9px;
-  outline:none
-}
-
-.auth-switch{
-  margin-top:14px;
-  font-size:12px;
-  color:#64748b
-}
-
-.auth-switch button{
-  border:0;
-  background:none;
-  color:#2563eb;
-  font-weight:800
-}
-
-.user-box{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:7px 10px;
-  background:var(--soft);
-  border-radius:12px;
-  font-size:11px
-}
-
-.user-email{
-  max-width:160px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap
-}
-
- .auth-tabs{display:flex;gap:8px;margin-top:18px;padding:4px;background:#f1f5f9;border-radius:14px}
-.auth-tab{flex:1;border:0;background:transparent;color:#64748b;padding:11px 8px;border-radius:10px;font-weight:800;cursor:pointer}
-.auth-tab.active{background:#fff;color:#2563eb;box-shadow:0 2px 8px #0f172a14}
-.phone-row{display:flex;gap:8px;align-items:center}
-.phone-row .country-code{flex:0 0 auto;padding:13px 10px;border:1px solid #dbe3ee;border-radius:12px;background:#f8fafc;font-weight:800;font-size:13px}
-.phone-row input{flex:1;min-width:0}
-#recaptcha-container{display:flex;justify-content:center;overflow:hidden}
-@media(max-width:850px){
-  .grid{
-    grid-template-columns:1fr
-  }
-
-  .payment{
-    max-width:620px;
-    margin:auto
-  }
-}
-
-@media(max-width:520px){
-  body{padding:8px}
-
-  .brand-icon{
-    width:42px;
-    height:42px
-  }
-
-  .brand h1{
-    font-size:18px
-  }
-
-  .grid{
-    gap:10px
-  }
-
-  .pad{
-    padding:10px
-  }
-
-  .key{
-    min-height:58px
-  }
-
-  .tools{
-    grid-template-columns:repeat(2,1fr)
-  }
-
-  .item-head,
-  .item{
-    grid-template-columns:1.2fr .55fr .75fr .8fr 30px;
-    font-size:10px
-  }
-
-  .form-grid{
-    grid-template-columns:1fr
-  }
-
-  .field.full{
-    grid-column:auto
-  }
-
-  .user-box{
-    display:none
-  }
-}
-
-@media(max-width:350px){
-  .key{
-    min-height:52px;
-    font-size:17px
-  }
-
-  .result{
-    font-size:32px
-  }
-}
-
-@media print{
-  body{
-    background:white;
-    padding:0
-  }
-
-  .app>header,
-  .grid,
-  .history,
-  .footer,
-  .modal{
-    display:none!important
-  }
-
-  .invoice{
-    display:block!important
-  }
-}
-</style>
+<style> :root{ --bg:#eef2f7; --card:#fff; --soft:#f7f9fc; --text:#0f172a; --muted:#64748b; --line:#e2e8f0; --blue:#2563eb; --green:#16a34a; --red:#dc2626; --amber:#d97706; --shadow:0 18px 45px #0f172a16; } *{ box-sizing:border-box; } html,body{ margin:0; min-height:100%; font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif; color:var(--text); } body{ background: radial-gradient(circle at 0 0,#dbeafe 0,transparent 32%), var(--bg); padding:12px; } button,input,select{ font:inherit; } button{ cursor:pointer; } button:disabled{ cursor:not-allowed; opacity:.6; } .app{ max-width:1250px; margin:auto; } header{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; } .brand{ display:flex; align-items:center; gap:11px; } .brand-icon{ width:48px; height:48px; border-radius:15px; background:linear-gradient(135deg,#2563eb,#1d4ed8); color:white; display:grid; place-items:center; font-weight:900; font-size:21px; box-shadow:0 8px 20px #2563eb30; } h1{ font-size:21px; margin:0; font-weight:900; } header p{ margin:3px 0 0; color:var(--muted); font-size:12px; } .head-actions{ display:flex; gap:7px; align-items:center; } .icon{ width:42px; height:42px; border:1px solid var(--line); background:var(--card); border-radius:13px; } .grid{ display:grid; grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr); gap:16px; } .card{ background:var(--card); border:1px solid var(--line); border-radius:24px; box-shadow:var(--shadow); overflow:hidden; } .pad{ padding:16px; } .display{ background:linear-gradient(145deg,#0b1220,#182235); color:white; border-radius:20px; padding:20px; min-height:145px; display:flex; flex-direction:column; justify-content:end; text-align:right; } .expr{ color:#94a3b8; font-size:13px; min-height:20px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .result{ font-size:clamp(36px,8vw,58px); font-weight:850; letter-spacing:-2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .keys{ display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin-top:12px; } .key{ min-height:64px; border:0; border-radius:17px; background:#f1f5f9; font-size:21px; font-weight:750; transition:transform .08s ease; } .key:active, .btn:active, .icon:active, .pay:active, .share:active{ transform:scale(.96); } .op{ background:#dbeafe; color:#1d4ed8; } .eq{ background:linear-gradient(135deg,#2563eb,#1d4ed8); color:white; } .danger{ background:#fee2e2; color:#dc2626; } .amber{ background:#fef3c7; color:#b45309; } .tools{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; } .btn{ border:1px solid var(--line); background:var(--soft); border-radius:13px; padding:11px 6px; font-size:12px; font-weight:800; transition:transform .08s ease; } .primary{ background:var(--blue); color:#fff; border-color:var(--blue); } .green{ background:var(--green); color:white; border-color:var(--green); } .logout{ background:#fee2e2; color:#dc2626; border-color:#fecaca; } .section-title{ font-weight:900; font-size:18px; } .muted{ color:var(--muted); font-size:12px; } .row{ display:flex; gap:8px; align-items:center; } .between{ display:flex; justify-content:space-between; gap:10px; align-items:center; } .form-grid{ display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; } .field label{ display:block; color:var(--muted); font-size:10px; font-weight:750; margin-bottom:4px; } .field input, .field select{ width:100%; padding:11px; border:1px solid var(--line); border-radius:11px; outline:none; background:#fff; color:var(--text); } .field input:focus, .field select:focus{ border-color:var(--blue); box-shadow:0 0 0 3px #2563eb18; } .field.full{ grid-column:1/-1; } .items{ margin-top:13px; border:1px solid var(--line); border-radius:15px; overflow:hidden; } .item-head, .item{ display:grid; grid-template-columns:1.5fr .6fr .8fr .8fr 32px; gap:7px; align-items:center; padding:9px; font-size:11px; } .item-head{ background:var(--soft); color:var(--muted); font-weight:800; } .item{ border-top:1px solid var(--line); } .item input{ width:100%; padding:8px; border:1px solid var(--line); border-radius:8px; background:var(--card); color:var(--text); } .remove{ width:30px; height:30px; border:0; border-radius:8px; background:#fee2e2; color:#dc2626; } .summary{ margin-top:12px; background:var(--soft); border-radius:15px; padding:13px; } .sumline{ display:flex; justify-content:space-between; padding:4px 0; font-size:13px; } .grand{ font-size:20px; font-weight:900; border-top:1px solid var(--line); margin-top:6px; padding-top:9px; } .payment{ text-align:center; } .qr{ width:min(230px,62vw); aspect-ratio:1; background:#fff; border-radius:18px; padding:12px; margin:18px auto; display:grid; place-items:center; box-shadow:0 8px 25px #0f172a12; } .qr img, .qr canvas{ max-width:200px!important; max-height:200px!important; } .amount{ font-size:34px; color:var(--green); font-weight:900; } .upi{ font-size:11px; color:var(--muted); word-break:break-all; margin:8px 0 12px; } .pay{ width:100%; padding:14px; border:0; border-radius:14px; background:var(--green); color:white; font-weight:900; } .share{ width:100%; padding:12px; border:0; border-radius:14px; background:#e2e8f0; margin-top:8px; font-weight:800; } .history{ margin-top:16px; padding:16px; } .history-list{ max-height:240px; overflow:auto; margin-top:9px; } .hist{ display:flex; justify-content:space-between; gap:8px; border-bottom:1px solid var(--line); padding:10px 0; font-size:12px; } .hist strong{ white-space:nowrap; } .empty{ color:var(--muted); font-size:12px; padding:10px 0; } .modal{ position:fixed; inset:0; background:#0f172a99; display:none; place-items:center; padding:15px; z-index:10; backdrop-filter:blur(5px); } .modal.show{ display:grid; } .modal-card{ width:min(520px,100%); background:var(--card); border-radius:22px; padding:18px; max-height:90vh; overflow:auto; } .close{ border:0; background:#f1f5f9; border-radius:9px; width:35px; height:35px; } .footer{ text-align:center; padding:20px; color:var(--muted); font-size:11px; } .tool-output{ margin-top:14px; background:var(--soft); border-radius:12px; padding:12px; font-weight:800; line-height:1.7; } body.dark{ --bg:#070b14; --card:#111827; --soft:#182131; --text:#f8fafc; --muted:#94a3b8; --line:#263244; } body.dark .icon, body.dark .field input, body.dark .field select{ background:#111827; color:#fff; border-color:#263244; } body.dark .key{ background:#1e293b; color:#fff; } body.dark .op{ background:#17315a; color:#93c5fd; } body.dark .danger{ background:#4c1d1d; color:#fecaca; } body.dark .amber{ background:#4a3510; color:#fde68a; } body.dark .share{ background:#263244; color:#fff; } /* LOGIN */ .login-gate{ position:fixed; inset:0; z-index:999; background:linear-gradient(135deg,#0b1220,#1e3a8a); display:none; align-items:center; justify-content:center; padding:20px; } .login-gate.show{ display:flex; } .gate-card{ width:min(430px,100%); background:#fff; color:#0f172a; border-radius:28px; padding:28px; box-shadow:0 25px 70px #0005; text-align:center; } .gate-logo{ width:72px; height:72px; border-radius:20px; background:#2563eb; color:#fff; display:grid; place-items:center; font-size:34px; font-weight:900; margin:0 auto 14px; } .gate-card h2{ margin:0; } .gate-card p{ color:#64748b; font-size:13px; line-height:1.5; } .gate-btn{ display:block; width:100%; padding:14px; border:0; border-radius:13px; background:#2563eb; color:#fff; font-weight:900; font-size:15px; margin-top:14px; } .gate-btn.secondary{ background:#16a34a; } .gate-btn.outline{ background:#f1f5f9; color:#0f172a; } .gate-msg{ min-height:18px; color:#dc2626; font-size:12px; font-weight:700; margin-top:10px; } .auth-form{ margin-top:15px; text-align:left; } .auth-form input{ width:100%; padding:13px; border:1px solid #dbe3ee; border-radius:12px; margin-bottom:9px; outline:none; } .auth-switch{ margin-top:14px; font-size:12px; color:#64748b; } .auth-switch button{ border:0; background:none; color:#2563eb; font-weight:800; } .user-box{ display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--soft); border-radius:12px; font-size:11px; } .user-email{ max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .auth-tabs{ display:flex; gap:8px; margin-top:18px; padding:4px; background:#f1f5f9; border-radius:14px; } .auth-tab{ flex:1; border:0; background:transparent; color:#64748b; padding:11px 8px; border-radius:10px; font-weight:800; cursor:pointer; } .auth-tab.active{ background:#fff; color:#2563eb; box-shadow:0 2px 8px #0f172a14; } .phone-row{ display:flex; gap:8px; align-items:center; } .phone-row .country-code{ flex:0 0 auto; padding:13px 10px; border:1px solid #dbe3ee; border-radius:12px; background:#f8fafc; font-weight:800; font-size:13px; } .phone-row input{ flex:1; min-width:0; } #recaptcha-container{ display:flex; justify-content:center; overflow:hidden; } @media(max-width:850px){ .grid{ grid-template-columns:1fr; } .payment{ max-width:620px; margin:auto; } } @media(max-width:520px){ body{ padding:8px; } .brand-icon{ width:42px; height:42px; } .brand h1{ font-size:18px; } .grid{ gap:10px; } .pad{ padding:10px; } .key{ min-height:58px; } .tools{ grid-template-columns:repeat(2,1fr); } .item-head, .item{ grid-template-columns:1.2fr .55fr .75fr .8fr 30px; font-size:10px; } .form-grid{ grid-template-columns:1fr; } .field.full{ grid-column:auto; } .user-box{ display:none; } } @media(max-width:350px){ .key{ min-height:52px; font-size:17px; } .result{ font-size:32px; } } @media print{ body{ background:white; padding:0; } .app>header, .grid, .history, .footer, .modal{ display:none!important; } .invoice{ display:block!important; } } </style>
 
 </head>
 
 <body>
 
 <!-- LOGIN GATE -->
-<div class="login-gate" id="loginGate">
-  <div class="gate-card">
-    <div class="gate-logo">₹</div>
-    <h2>SMART CALCULATOR</h2>
-    <p><strong>Smart Calculation</strong><br>Login is required to use the calculator and billing system.</p>
 
-    <div class="auth-tabs">
-      <button type="button" class="auth-tab active" id="emailTab" onclick="showEmailLogin()">✉️ Email</button>
-      <button type="button" class="auth-tab" id="phoneTab" onclick="showPhoneLogin()">📱 Mobile OTP</button>
-    </div>
+<div class="login-gate" id="loginGate"> <div class="gate-card">
 
-    <div class="auth-form" id="emailAuthForm">
-      <input id="authEmail" type="email" placeholder="Email address" autocomplete="email">
-      <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password">
-      <button class="gate-btn" id="loginBtn" onclick="loginUser()">🔐 LOGIN</button>
-      <button class="gate-btn secondary" id="signupBtn" onclick="signupUser()">👤 CREATE ACCOUNT</button>
-      <button class="gate-btn outline" onclick="resetPassword()">🔑 FORGOT PASSWORD</button>
-    </div>
+<div class="gate-logo">₹</div>
 
-    <div class="auth-form" id="phoneAuthForm" style="display:none">
-      <div class="phone-row">
-        <div class="country-code">🇮🇳 +91</div>
-        <input id="authPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="Mobile number" autocomplete="tel-national">
-      </div>
-      <button class="gate-btn" id="sendOtpBtn" onclick="sendPhoneOTP()">📲 SEND OTP</button>
+<h2>SMART CALCULATOR</h2>
 
-      <div id="otpSection" style="display:none">
-        <input id="authOtp" type="text" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit OTP" autocomplete="one-time-code">
-        <button class="gate-btn secondary" id="verifyOtpBtn" onclick="verifyPhoneOTP()">🔐 VERIFY OTP</button>
-        <button class="gate-btn outline" id="resendOtpBtn" onclick="sendPhoneOTP(true)">↻ RESEND OTP</button>
-      </div>
+<p>
+  <strong>Smart Calculation</strong><br>
+  Login is required to use the calculator and billing system.
+</p>
 
-      <div id="recaptcha-container" style="margin-top:10px"></div>
-    </div>
+<div class="auth-tabs">
+  <button
+    type="button"
+    class="auth-tab active"
+    id="emailTab"
+    onclick="showEmailLogin()">
+    ✉️ Email
+  </button>
 
-    <div id="gateMsg" class="gate-msg"></div>
-  </div>
+  <button
+    type="button"
+    class="auth-tab"
+    id="phoneTab"
+    onclick="showPhoneLogin()">
+    📱 Mobile OTP
+  </button>
 </div>
+
+<div class="auth-form" id="emailAuthForm">
+
+  <input
+    id="authEmail"
+    type="email"
+    placeholder="Email address"
+    autocomplete="email">
+
+  <input
+    id="authPassword"
+    type="password"
+    placeholder="Password"
+    autocomplete="current-password">
+
+  <button
+    class="gate-btn"
+    id="loginBtn"
+    onclick="loginUser()">
+    🔐 LOGIN
+  </button>
+
+  <button
+    class="gate-btn secondary"
+    id="signupBtn"
+    onclick="signupUser()">
+    👤 CREATE ACCOUNT
+  </button>
+
+  <button
+    class="gate-btn outline"
+    onclick="resetPassword()">
+    🔑 FORGOT PASSWORD
+  </button>
+
+</div>
+
+<div
+  class="auth-form"
+  id="phoneAuthForm"
+  style="display:none">
+
+  <div class="phone-row">
+
+    <div class="country-code">
+      🇮🇳 +91
+    </div>
+
+    <input
+      id="authPhone"
+      type="tel"
+      inputmode="numeric"
+      maxlength="10"
+      placeholder="Mobile number"
+      autocomplete="tel-national">
+
+  </div>
+
+  <button
+    class="gate-btn"
+    id="sendOtpBtn"
+    onclick="sendPhoneOTP()">
+    📲 SEND OTP
+  </button>
+
+  <div id="otpSection" style="display:none">
+
+    <input
+      id="authOtp"
+      type="text"
+      inputmode="numeric"
+      maxlength="6"
+      placeholder="Enter 6-digit OTP"
+      autocomplete="one-time-code">
+
+    <button
+      class="gate-btn secondary"
+      id="verifyOtpBtn"
+      onclick="verifyPhoneOTP()">
+      🔐 VERIFY OTP
+    </button>
+
+    <button
+      class="gate-btn outline"
+      id="resendOtpBtn"
+      onclick="sendPhoneOTP(true)">
+      ↻ RESEND OTP
+    </button>
+
+  </div>
+
+  <div
+    id="recaptcha-container"
+    style="margin-top:10px">
+  </div>
+
+</div>
+
+<div
+  id="gateMsg"
+  class="gate-msg">
+</div>
+
+</div> </div>
 
 <div class="app">
 
 <header>
 
-  <div class="brand">
+<div class="brand">
 
 <div class="brand-icon">₹</div>
 
@@ -784,16 +162,15 @@ body.dark .amber{
   <p>Smart Calculation, Smarter Business</p>
 </div>
 
-  </div>
+</div>
 
-  <div class="head-actions">
+<div class="head-actions">
 
 <div class="user-box">
   👤
   <span
     id="userEmail"
-    class="user-email"
-  >
+    class="user-email">
     Not logged in
   </span>
 </div>
@@ -802,236 +179,208 @@ body.dark .amber{
   class="icon"
   id="installBtn"
   title="Install"
-  hidden
->
+  hidden>
   ⬇️
 </button>
 
 <button
   class="icon"
   onclick="toggleDark()"
-  title="Theme"
->
+  title="Theme">
   🌙
 </button>
 
 <button
   class="icon"
   onclick="logoutUser()"
-  title="Logout"
->
+  title="Logout">
   🚪
 </button>
 
-  </div>
+</div>
 
 </header>
 
 <div class="grid">
 
+<!-- CALCULATOR -->
+
 <section class="card pad">
 
-  <div class="display">
+<div class="display">
 
 <div
   class="expr"
-  id="expr"
-></div>
+  id="expr">
+</div>
 
 <div
   class="result"
-  id="display"
->
+  id="display">
   0
 </div>
 
-  </div>
+</div>
 
-  <div class="keys">
+<div class="keys">
 
 <button
   class="key danger"
-  onclick="clearCalc()"
->
+  onclick="clearCalc()">
   AC
 </button>
 
 <button
   class="key amber"
-  onclick="backspace()"
->
+  onclick="backspace()">
   ⌫
 </button>
 
 <button
   class="key"
-  onclick="percent()"
->
+  onclick="percent()">
   %
 </button>
 
 <button
   class="key op"
-  onclick="op('/')"
->
+  onclick="op('/')">
   ÷
 </button>
 
-
 <button
   class="key"
-  onclick="num('7')"
->
+  onclick="num('7')">
   7
 </button>
 
 <button
   class="key"
-  onclick="num('8')"
->
+  onclick="num('8')">
   8
 </button>
 
 <button
   class="key"
-  onclick="num('9')"
->
+  onclick="num('9')">
   9
 </button>
 
 <button
   class="key op"
-  onclick="op('*')"
->
+  onclick="op('*')">
   ×
 </button>
 
-
 <button
   class="key"
-  onclick="num('4')"
->
+  onclick="num('4')">
   4
 </button>
 
 <button
   class="key"
-  onclick="num('5')"
->
+  onclick="num('5')">
   5
 </button>
 
 <button
   class="key"
-  onclick="num('6')"
->
+  onclick="num('6')">
   6
 </button>
 
 <button
   class="key op"
-  onclick="op('-')"
->
+  onclick="op('-')">
   −
 </button>
 
-
 <button
   class="key"
-  onclick="num('1')"
->
+  onclick="num('1')">
   1
 </button>
 
 <button
   class="key"
-  onclick="num('2')"
->
+  onclick="num('2')">
   2
 </button>
 
 <button
   class="key"
-  onclick="num('3')"
->
+  onclick="num('3')">
   3
 </button>
 
 <button
   class="key op"
-  onclick="op('+')"
->
+  onclick="op('+')">
   +
 </button>
 
-
 <button
   class="key"
-  onclick="num('00')"
->
+  onclick="num('00')">
   00
 </button>
 
 <button
   class="key"
-  onclick="num('0')"
->
+  onclick="num('0')">
   0
 </button>
 
 <button
   class="key"
-  onclick="dot()"
->
+  onclick="dot()">
   .
 </button>
 
 <button
   class="key eq"
-  onclick="equal()"
->
+  onclick="equal()">
   =
 </button>
 
-  </div>
+</div>
 
-  <div class="tools">
+<div class="tools">
 
 <button
   class="btn"
-  onclick="openTool('gst')"
->
+  onclick="openTool('gst')">
   🧾 GST
 </button>
 
 <button
   class="btn"
-  onclick="openTool('discount')"
->
+  onclick="openTool('discount')">
   🏷️ Discount
 </button>
 
 <button
   class="btn"
-  onclick="openTool('qty')"
->
+  onclick="openTool('qty')">
   📦 Qty × Rate
 </button>
 
 <button
   class="btn"
-  onclick="addCurrentItem()"
->
+  onclick="addCurrentItem()">
   ➕ Add Item
 </button>
 
-  </div>
+</div>
 
 </section>
 
+<!-- BILL -->
+
 <section class="card pad">
 
-  <div class="between">
+<div class="between">
 
 <div>
   <div class="section-title">
@@ -1045,21 +394,19 @@ body.dark .amber{
 
 <button
   class="btn"
-  onclick="newBill()"
->
+  onclick="newBill()">
   New
 </button>
 
-  </div>
+</div>
 
-  <div class="form-grid">
+<div class="form-grid">
 
 <div class="field">
   <label>Customer Name</label>
   <input
     id="customer"
-    placeholder="Customer name"
-  >
+    placeholder="Customer name">
 </div>
 
 <div class="field">
@@ -1067,8 +414,7 @@ body.dark .amber{
   <input
     id="mobile"
     inputmode="numeric"
-    placeholder="Mobile number"
-  >
+    placeholder="Mobile number">
 </div>
 
 <div class="field">
@@ -1080,8 +426,7 @@ body.dark .amber{
   <label>Date</label>
   <input
     id="billDate"
-    type="date"
-  >
+    type="date">
 </div>
 
 <div class="field">
@@ -1091,8 +436,7 @@ body.dark .amber{
     type="number"
     min="0"
     value="0"
-    oninput="renderBill()"
-  >
+    oninput="renderBill()">
 </div>
 
 <div class="field">
@@ -1100,20 +444,21 @@ body.dark .amber{
 
   <select
     id="billGst"
-    onchange="renderBill()"
-  >
+    onchange="renderBill()">
+
     <option value="0">0%</option>
     <option value="5">5%</option>
     <option value="12">12%</option>
     <option value="18" selected>18%</option>
     <option value="28">28%</option>
+
   </select>
 
 </div>
 
-  </div>
+</div>
 
-  <div class="items">
+<div class="items">
 
 <div class="item-head">
   <span>Item</span>
@@ -1125,9 +470,9 @@ body.dark .amber{
 
 <div id="items"></div>
 
-  </div>
+</div>
 
-  <div class="summary">
+<div class="summary">
 
 <div class="sumline">
   <span>Subtotal</span>
@@ -1149,50 +494,45 @@ body.dark .amber{
   <strong id="grand">₹0.00</strong>
 </div>
 
-  </div>
+</div>
 
-  <div class="tools">
+<div class="tools">
 
 <button
   class="btn primary"
-  onclick="saveBill()"
->
+  onclick="saveBill()">
   💾 Save Bill
 </button>
 
 <button
   class="btn"
-  onclick="printInvoice()"
->
+  onclick="printInvoice()">
   🖨️ Print
 </button>
 
 <button
   class="btn"
-  onclick="shareBill()"
->
+  onclick="shareBill()">
   📤 Share
 </button>
 
 <button
   class="btn"
-  onclick="clearItems()"
->
+  onclick="clearItems()">
   🗑️ Clear
 </button>
 
-  </div>
+</div>
 
 </section>
 
 </div>
 
-<section
-  class="card pad payment"
-  style="margin-top:16px"
->
+<!-- UPI PAYMENT -->
 
-  <div class="between">
+<section class="card pad payment" style="margin-top:16px">
+
+<div class="between">
 
 <div>
   <div class="section-title">
@@ -1208,9 +548,9 @@ body.dark .amber{
   UPI READY
 </span>
 
-  </div>
+</div>
 
-  <div class="qr">
+<div class="qr">
 
 <div id="qrcode">
   <span class="muted">
@@ -1218,48 +558,29 @@ body.dark .amber{
   </span>
 </div>
 
-  </div>
+</div>
 
-  <div class="muted">
-    PAYMENT AMOUNT
-  </div>
+<div class="muted"> PAYMENT AMOUNT </div>
 
-  <div class="amount">
-    ₹<span id="upiAmount">0.00</span>
-  </div>
+<div class="amount"> ₹<span id="upiAmount">0.00</span> </div>
 
-  <div class="upi">
-    UPI ID:
-    <strong id="upiDisplay">
-      YOURUPIID@upi
-    </strong>
-  </div>
+<div class="upi"> UPI ID: <strong id="upiDisplay"> YOURUPIID@upi </strong> </div>
 
-  <div class="row">
+<div class="row">
 
 <button
   class="pay"
-  onclick="payNow()"
->
+  onclick="payNow()">
   💳 PAY NOW
 </button>
 
-  </div>
+</div>
 
-<button
-class="share"
-onclick="sharePayment()"
-
->
-
+<button class="share" onclick="sharePayment()">
 📲 Share Payment Details
+</button>
 
-  </button>
-
-  <div
-    class="form-grid"
-    style="text-align:left;margin-top:14px"
-  >
+<div class="form-grid" style="text-align:left;margin-top:14px">
 
 <div class="field full">
 
@@ -1269,20 +590,21 @@ onclick="sharePayment()"
 
   <input
     id="upiInput"
-    value="yourbusiness@upi"
+    value="satyendra6528@ybl"
     oninput="updateUPI()"
-    placeholder="yourbusiness@upi"
-  >
+    placeholder="yourbusiness@upi">
 
 </div>
 
-  </div>
+</div>
 
 </section>
 
+<!-- HISTORY -->
+
 <section class="card history">
 
-  <div class="between">
+<div class="between">
 
 <div class="section-title">
   Bill History
@@ -1290,54 +612,43 @@ onclick="sharePayment()"
 
 <button
   class="btn"
-  onclick="clearHistory()"
->
+  onclick="clearHistory()">
   Clear History
 </button>
 
-  </div>
+</div>
 
-  <div
-    class="history-list"
-    id="history"
-  ></div>
+<div class="history-list" id="history"> </div>
 
 </section>
 
-<div class="footer">
-  SMART CALCULATOR © 2026 • Smart Calculation
-</div>
+<div class="footer"> SMART CALCULATOR © 2026 • Smart Calculation </div>
 
 </div>
 
 <!-- TOOLS MODAL -->
 
-<div
-  class="modal"
-  id="modal"
->
+<div class="modal" id="modal">
 
-  <div class="modal-card">
+<div class="modal-card">
 
 <div class="between">
 
   <h2
     id="modalTitle"
-    style="margin:0"
-  >
+    style="margin:0">
     Tool
   </h2>
 
   <button
     class="close"
-    onclick="closeTool()"
-  >
+    onclick="closeTool()">
     ×
   </button>
 
 </div>
 
-
+<!-- GST TOOL -->
 <div id="gstTool" hidden>
 
   <div class="field">
@@ -1346,43 +657,38 @@ onclick="sharePayment()"
 
     <input
       id="toolGstAmount"
-      type="number"
-    >
+      type="number">
 
   </div>
-
 
   <div class="field">
 
     <label>GST Rate</label>
 
     <select id="toolGstRate">
-      <option>5</option>
-      <option>12</option>
-      <option selected>18</option>
-      <option>28</option>
+      <option value="5">5%</option>
+      <option value="12">12%</option>
+      <option value="18" selected>18%</option>
+      <option value="28">28%</option>
     </select>
 
   </div>
 
-
   <button
     class="btn primary"
     style="width:100%;margin-top:10px"
-    onclick="toolGST()"
-  >
+    onclick="toolGST()">
     Calculate
   </button>
 
-
   <div
     class="tool-output"
-    id="toolGstOut"
-  ></div>
+    id="toolGstOut">
+  </div>
 
 </div>
 
-
+<!-- DISCOUNT TOOL -->
 <div id="discountTool" hidden>
 
   <div class="field">
@@ -1391,11 +697,9 @@ onclick="sharePayment()"
 
     <input
       id="toolDiscAmount"
-      type="number"
-    >
+      type="number">
 
   </div>
-
 
   <div class="field">
 
@@ -1404,29 +708,25 @@ onclick="sharePayment()"
     <input
       id="toolDiscRate"
       type="number"
-      value="10"
-    >
+      value="10">
 
   </div>
-
 
   <button
     class="btn primary"
     style="width:100%;margin-top:10px"
-    onclick="toolDiscount()"
-  >
+    onclick="toolDiscount()">
     Calculate
   </button>
 
-
   <div
     class="tool-output"
-    id="toolDiscOut"
-  ></div>
+    id="toolDiscOut">
+  </div>
 
 </div>
 
-
+<!-- QUANTITY RATE TOOL -->
 <div id="qtyTool" hidden>
 
   <div class="field">
@@ -1436,11 +736,9 @@ onclick="sharePayment()"
     <input
       id="toolQty"
       type="number"
-      value="1"
-    >
+      value="1">
 
   </div>
-
 
   <div class="field">
 
@@ -1448,29 +746,25 @@ onclick="sharePayment()"
 
     <input
       id="toolRate"
-      type="number"
-    >
+      type="number">
 
   </div>
-
 
   <button
     class="btn primary"
     style="width:100%;margin-top:10px"
-    onclick="toolQty()"
-  >
+    onclick="calculateQtyRate()">
     Calculate
   </button>
 
-
   <div
     class="tool-output"
-    id="toolQtyOut"
-  ></div>
+    id="toolQtyOut">
+  </div>
 
 </div>
 
-  </div>
+</div>
 
 </div>
 
@@ -1479,1478 +773,12 @@ onclick="sharePayment()"
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <!-- FIREBASE -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  signOut,
-  RecaptchaVerifier,
-  signInWithPhoneNumber
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDnSQRvLGVt7t4rsNwJ8i4bwnKkTZgw58Q",
-  authDomain: "smart-calculator-a2d0d.firebaseapp.com",
-  projectId: "smart-calculator-a2d0d",
-  storageBucket: "smart-calculator-a2d0d.firebasestorage.app",
-  messagingSenderId: "666337210440",
-  appId: "1:666337210440:web:66af57c60cc4b0bf29a87d"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-let confirmationResult = null;
-let recaptchaVerifier = null;
-
-function msg(text, ok=false){
-  const el=document.getElementById("gateMsg");
-  if(!el) return;
-  el.style.color=ok ? "#16a34a" : "#dc2626";
-  el.textContent=text;
-}
-
-window.showEmailLogin=function(){
-  document.getElementById("emailAuthForm").style.display="block";
-  document.getElementById("phoneAuthForm").style.display="none";
-  document.getElementById("emailTab").classList.add("active");
-  document.getElementById("phoneTab").classList.remove("active");
-  msg("");
-};
-
-window.showPhoneLogin=function(){
-  document.getElementById("emailAuthForm").style.display="none";
-  document.getElementById("phoneAuthForm").style.display="block";
-  document.getElementById("emailTab").classList.remove("active");
-  document.getElementById("phoneTab").classList.add("active");
-  msg("");
-  setupRecaptcha();
-};
-
-function setupRecaptcha(){
-  if(recaptchaVerifier) return;
-  try{
-    recaptchaVerifier = new RecaptchaVerifier(auth,"recaptcha-container",{
-      size:"normal",
-      callback:()=>msg("reCAPTCHA verified. You can send the OTP.",true),
-      "expired-callback":()=>msg("reCAPTCHA expired. Please verify it again.")
-    });
-    recaptchaVerifier.render().catch(error=>{
-      console.error("reCAPTCHA render error",error);
-      msg("Could not load reCAPTCHA. Check your authorized domain and internet connection.");
-    });
-  }catch(error){
-    console.error("reCAPTCHA setup error",error);
-    msg("Could not initialize reCAPTCHA. Check Firebase Phone Authentication settings.");
-  }
-}
-
-window.sendPhoneOTP=async function(isResend=false){
-  const input=document.getElementById("authPhone");
-  const phone=(input.value||"").replace(/\D/g,"");
-  if(!/^\d{10}$/.test(phone)){
-    msg("Enter a valid 10-digit Indian mobile number.");
-    input.focus();
-    return;
-  }
-  setupRecaptcha();
-  if(!recaptchaVerifier){
-    msg("reCAPTCHA is not ready. Please wait a moment and try again.");
-    return;
-  }
-  const btn=document.getElementById("sendOtpBtn");
-  btn.disabled=true;
-  btn.textContent=isResend ? "↻ SENDING OTP..." : "📲 SENDING OTP...";
-  msg("Sending OTP...");
-  try{
-    confirmationResult=await signInWithPhoneNumber(auth,"+91"+phone,recaptchaVerifier);
-    document.getElementById("otpSection").style.display="block";
-    document.getElementById("authOtp").focus();
-    msg("OTP sent to +91 " + phone + ".",true);
-  }catch(error){
-    console.error(error);
-    msg(firebaseError(error.code));
-    try{
-      if(recaptchaVerifier){
-        recaptchaVerifier.clear();
-        recaptchaVerifier=null;
-      }
-      setupRecaptcha();
-    }catch(e){ console.error(e); }
-  }finally{
-    btn.disabled=false;
-    btn.textContent=isResend ? "↻ RESEND OTP" : "📲 SEND OTP";
-  }
-};
-
-window.verifyPhoneOTP=async function(){
-  const code=(document.getElementById("authOtp").value||"").trim();
-  if(!confirmationResult){
-    msg("Please request an OTP first.");
-    return;
-  }
-  if(!/^\d{6}$/.test(code)){
-    msg("Enter the 6-digit OTP.");
-    return;
-  }
-  const btn=document.getElementById("verifyOtpBtn");
-  btn.disabled=true;
-  btn.textContent="🔐 VERIFYING...";
-  msg("Verifying OTP...");
-  try{
-    await confirmationResult.confirm(code);
-    confirmationResult=null;
-    msg("Mobile login successful.",true);
-  }catch(error){
-    console.error(error);
-    msg(firebaseError(error.code));
-  }finally{
-    btn.disabled=false;
-    btn.textContent="🔐 VERIFY OTP";
-  }
-};
-
-window.loginUser=async function(){
-  const email=document.getElementById("authEmail").value.trim();
-  const password=document.getElementById("authPassword").value;
-  if(!email || !password){msg("Please enter email and password.");return;}
-  msg("Logging in...");
-  try{
-    await signInWithEmailAndPassword(auth,email,password);
-    msg("Login successful.",true);
-  }catch(error){
-    console.error(error);
-    msg(firebaseError(error.code));
-  }
-};
-
-window.signupUser=async function(){
-  const email=document.getElementById("authEmail").value.trim();
-  const password=document.getElementById("authPassword").value;
-  if(!email || !password){msg("Enter email and password.");return;}
-  if(password.length<6){msg("Password must contain at least 6 characters.");return;}
-  msg("Creating account...");
-  try{
-    await createUserWithEmailAndPassword(auth,email,password);
-    msg("Account created successfully.",true);
-  }catch(error){
-    console.error(error);
-    msg(firebaseError(error.code));
-  }
-};
-
-window.resetPassword=async function(){
-  const email=document.getElementById("authEmail").value.trim();
-  if(!email){msg("Enter your email address first.");return;}
-  try{
-    await sendPasswordResetEmail(auth,email);
-    msg("Password reset email sent.",true);
-  }catch(error){
-    console.error(error);
-    msg(firebaseError(error.code));
-  }
-};
-
-window.logoutUser=async function(){
-  if(!confirm("Do you want to logout?")) return;
-  try{await signOut(auth);}
-  catch(error){console.error(error);msg(firebaseError(error.code));}
-};
-
-onAuthStateChanged(auth,user=>{
-  const gate=document.getElementById("loginGate");
-  const emailEl=document.getElementById("userEmail");
-  if(user){
-    gate.classList.remove("show");
-    emailEl.textContent=user.email || user.phoneNumber || "Logged in";
-    console.log("Logged in:",user.email || user.phoneNumber);
-  }else{
-    gate.classList.add("show");
-    emailEl.textContent="Not logged in";
-  }
-});
-
-function firebaseError(code){
-  switch(code){
-    case "auth/invalid-email": return "Invalid email address.";
-    case "auth/user-not-found": return "No account found with this email.";
-    case "auth/wrong-password": return "Incorrect password.";
-    case "auth/invalid-credential": return "Incorrect email or password.";
-    case "auth/email-already-in-use": return "This email is already registered.";
-    case "auth/weak-password": return "Password is too weak.";
-    case "auth/too-many-requests": return "Too many attempts. Try again later.";
-    case "auth/invalid-phone-number": return "Invalid mobile number.";
-    case "auth/missing-phone-number": return "Enter a mobile number.";
-    case "auth/quota-exceeded": return "SMS quota exceeded. Try again later.";
-    case "auth/captcha-check-failed": return "reCAPTCHA verification failed. Please try again.";
-    case "auth/operation-not-allowed": return "Phone Authentication is not enabled in Firebase.";
-    case "auth/code-expired": return "OTP expired. Please request a new OTP.";
-    case "auth/invalid-verification-code": return "Incorrect OTP. Please check and try again.";
-    case "auth/missing-verification-code": return "Enter the OTP you received.";
-    case "auth/network-request-failed": return "Network error. Check your internet connection.";
-    case "auth/unauthorized-domain": return "This website domain is not authorized in Firebase Authentication.";
-    default: return "Authentication failed. Please try again.";
-  }
-}
-</script>
+<script type="module"> import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js"; import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js"; const firebaseConfig = { apiKey: "AIzaSyDnSQRvLGVt7t4rsNwJ8i4bwnKkTZgw58Q", authDomain: "smart-calculator-a2d0d.firebaseapp.com", projectId: "smart-calculator-a2d0d", storageBucket: "smart-calculator-a2d0d.firebasestorage.app", messagingSenderId: "666337210440", appId: "1:666337210440:web:66af57c60cc4b0bf29a87d" }; const app=initializeApp(firebaseConfig); const auth=getAuth(app); let confirmationResult=null; let recaptchaVerifier=null; function msg(text,ok=false){ const el=document.getElementById("gateMsg"); if(!el) return; el.style.color= ok ? "#16a34a" : "#dc2626"; el.textContent=text; } window.showEmailLogin=function(){ document.getElementById("emailAuthForm").style.display="block"; document.getElementById("phoneAuthForm").style.display="none"; document.getElementById("emailTab").classList.add("active"); document.getElementById("phoneTab").classList.remove("active"); msg(""); }; window.showPhoneLogin=function(){ document.getElementById("emailAuthForm").style.display="none"; document.getElementById("phoneAuthForm").style.display="block"; document.getElementById("emailTab").classList.remove("active"); document.getElementById("phoneTab").classList.add("active"); msg(""); setupRecaptcha(); }; function setupRecaptcha(){ if(recaptchaVerifier) return; try{ recaptchaVerifier = new RecaptchaVerifier( auth, "recaptcha-container", { size:"normal", callback:()=>{ msg( "reCAPTCHA verified. You can send the OTP.", true ); }, "expired-callback":()=>{ msg( "reCAPTCHA expired. Please verify it again." ); } } ); recaptchaVerifier .render() .catch(error=>{ console.error( "reCAPTCHA render error", error ); msg( "Could not load reCAPTCHA. Check your Firebase authorized domain and internet connection." ); }); }catch(error){ console.error( "reCAPTCHA setup error", error ); msg( "Could not initialize reCAPTCHA. Check Firebase Phone Authentication settings." ); } } window.sendPhoneOTP=async function(isResend=false){ const input= document.getElementById("authPhone"); const phone= (input.value||"") .replace(/\D/g,""); if(!/^\d{10}$/.test(phone)){ msg( "Enter a valid 10-digit Indian mobile number." ); input.focus(); return; } setupRecaptcha(); if(!recaptchaVerifier){ msg( "reCAPTCHA is not ready. Please wait a moment and try again." ); return; } const btn= document.getElementById("sendOtpBtn"); btn.disabled=true; btn.textContent= isResend ? "↻ SENDING OTP..." : "📲 SENDING OTP..."; msg("Sending OTP..."); try{ confirmationResult= await signInWithPhoneNumber( auth, "+91"+phone, recaptchaVerifier ); document.getElementById( "otpSection" ).style.display="block"; document.getElementById( "authOtp" ).focus(); msg( "OTP sent to +91 "+phone+".", true ); }catch(error){ console.error(error); msg( firebaseError(error.code) ); try{ if(recaptchaVerifier){ recaptchaVerifier.clear(); recaptchaVerifier=null; } setupRecaptcha(); }catch(e){ console.error(e); } }finally{ btn.disabled=false; btn.textContent= isResend ? "↻ RESEND OTP" : "📲 SEND OTP"; } }; window.verifyPhoneOTP=async function(){ const code= ( document.getElementById( "authOtp" ).value||"" ).trim(); if(!confirmationResult){ msg( "Please request an OTP first." ); return; } if(!/^\d{6}$/.test(code)){ msg( "Enter the 6-digit OTP." ); return; } const btn= document.getElementById( "verifyOtpBtn" ); btn.disabled=true; btn.textContent="🔐 VERIFYING..."; msg("Verifying OTP..."); try{ await confirmationResult.confirm(code); confirmationResult=null; msg( "Mobile login successful.", true ); }catch(error){ console.error(error); msg( firebaseError(error.code) ); }finally{ btn.disabled=false; btn.textContent="🔐 VERIFY OTP"; } }; window.loginUser=async function(){ const email= document.getElementById( "authEmail" ).value.trim(); const password= document.getElementById( "authPassword" ).value; if(!email || !password){ msg( "Please enter email and password." ); return; } msg("Logging in..."); try{ await signInWithEmailAndPassword( auth, email, password ); msg( "Login successful.", true ); }catch(error){ console.error(error); msg( firebaseError(error.code) ); } }; window.signupUser=async function(){ const email= document.getElementById( "authEmail" ).value.trim(); const password= document.getElementById( "authPassword" ).value; if(!email || !password){ msg( "Enter email and password." ); return; } if(password.length<6){ msg( "Password must contain at least 6 characters." ); return; } msg("Creating account..."); try{ await createUserWithEmailAndPassword( auth, email, password ); msg( "Account created successfully.", true ); }catch(error){ console.error(error); msg( firebaseError(error.code) ); } }; window.resetPassword=async function(){ const email= document.getElementById( "authEmail" ).value.trim(); if(!email){ msg( "Enter your email address first." ); return; } try{ await sendPasswordResetEmail( auth, email ); msg( "Password reset email sent.", true ); }catch(error){ console.error(error); msg( firebaseError(error.code) ); } }; window.logoutUser=async function(){ if(!confirm( "Do you want to logout?" )) return; try{ await signOut(auth); }catch(error){ console.error(error); msg( firebaseError(error.code) ); } }; onAuthStateChanged( auth, user=>{ const gate= document.getElementById( "loginGate" ); const emailEl= document.getElementById( "userEmail" ); if(user){ gate.classList.remove("show"); emailEl.textContent= user.email || user.phoneNumber || "Logged in"; console.log( "Logged in:", user.email || user.phoneNumber ); }else{ gate.classList.add("show"); emailEl.textContent= "Not logged in"; } } ); function firebaseError(code){ switch(code){ case "auth/invalid-email": return "Invalid email address."; case "auth/user-not-found": return "No account found with this email."; case "auth/wrong-password": return "Incorrect password."; case "auth/invalid-credential": return "Incorrect email or password."; case "auth/email-already-in-use": return "This email is already registered."; case "auth/weak-password": return "Password is too weak."; case "auth/too-many-requests": return "Too many attempts. Try again later."; case "auth/invalid-phone-number": return "Invalid mobile number."; case "auth/missing-phone-number": return "Enter a mobile number."; case "auth/quota-exceeded": return "SMS quota exceeded. Try again later."; case "auth/captcha-check-failed": return "reCAPTCHA verification failed. Please try again."; case "auth/operation-not-allowed": return "Phone Authentication is not enabled in Firebase."; case "auth/code-expired": return "OTP expired. Please request a new OTP."; case "auth/invalid-verification-code": return "Incorrect OTP. Please check and try again."; case "auth/missing-verification-code": return "Enter the OTP you received."; case "auth/network-request-failed": return "Network error. Check your internet connection."; case "auth/unauthorized-domain": return "This website domain is not authorized in Firebase Authentication."; default: return "Authentication failed. Please try again."; } } </script>
 
 <!-- MAIN APPLICATION SCRIPT -->
 
-<script>
-
-const $ = id =>
-  document.getElementById(id);
-
-
-/*
-====================================================
- MONEY FORMAT
-====================================================
-*/
-
-const money = n =>
-  '₹' +
-  Number(n || 0).toLocaleString(
-    'en-IN',
-    {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    }
-  );
-
-
-/*
-====================================================
- CALCULATOR VARIABLES
-====================================================
-*/
-
-let cur='0';
-
-let prev=null;
-
-let oper=null;
-
-let reset=false;
-
-let items=[];
-
-
-/*
-====================================================
- UPI
-====================================================
-*/
-
-let upi =
-  localStorage.getItem('smart_upi')
-  ||
-  'satyendra6528@ybl';
-
-
-$('upiInput').value=upi;
-
-$('upiDisplay').textContent=upi;
-
-
-/*
-====================================================
- DATE + INVOICE
-====================================================
-*/
-
-const today=new Date();
-
-$('billDate').value =
-  today.toISOString().slice(0,10);
-
-
-function invoice(){
-
-  return 'KT-' +
-    Date.now().toString().slice(-7);
-
-}
-
-
-$('invoiceNo').value=invoice();
-
-
-/*
-====================================================
- CALCULATOR
-====================================================
-*/
-
-function fmt(n){
-
-  return Number(
-    parseFloat(n).toFixed(10)
-  ).toString();
-
-}
-
-
-function refresh(){
-
-  $('display').textContent=cur;
-
-  updatePayment();
-
-}
-
-
-function num(v){
-
-  if(
-    cur==='0' ||
-    reset ||
-    cur==='Error'
-  ){
-
-    cur=v;
-
-    reset=false;
-
-  }
-
-  else if(cur.length<18){
-
-    cur+=v;
-
-  }
-
-  refresh();
-
-}
-
-
-function dot(){
-
-  if(cur==='Error'){
-
-    cur='0.';
-
-    reset=false;
-
-  }
-
-  else if(reset){
-
-    cur='0.';
-
-    reset=false;
-
-  }
-
-  else if(!cur.includes('.')){
-
-    cur+='.'; 
-
-  }
-
-  refresh();
-
-}
-
-
-function op(o){
-
-  if(cur==='Error'){
-
-    clearCalc();
-
-    return;
-
-  }
-
-  if(oper && !reset){
-
-    equal();
-
-  }
-
-  prev=parseFloat(cur);
-
-  oper=o;
-
-  reset=true;
-
-  $('expr').textContent =
-    fmt(prev) +
-    ' ' +
-    ({
-      '/':'÷',
-      '*':'×',
-      '-':'−',
-      '+':'+'
-    }[o]);
-
-}
-
-
-function equal(){
-
-  if(prev===null || !oper)
-    return;
-
-
-  let b=parseFloat(cur);
-
-  let a=prev;
-
-  let r =
-    oper==='+' ? a+b :
-    oper==='-' ? a-b :
-    oper==='*' ? a*b :
-    b===0 ? NaN : a/b;
-
-
-  if(!isFinite(r)){
-
-    cur='Error';
-
-    prev=null;
-
-    oper=null;
-
-    refresh();
-
-    return;
-
-  }
-
-
-  let e =
-    `${fmt(a)} ${
-      ({
-        '/':'÷',
-        '*':'×',
-        '-':'−',
-        '+':'+'
-      }[oper])
-    } ${fmt(b)}`;
-
-
-  cur=fmt(r);
-
-  $('expr').textContent=e+' =';
-
-  addHistory(e,cur);
-
-  prev=null;
-
-  oper=null;
-
-  reset=true;
-
-  refresh();
-
-}
-
-
-function clearCalc(){
-
-  cur='0';
-
-  prev=null;
-
-  oper=null;
-
-  reset=false;
-
-  $('expr').textContent='';
-
-  refresh();
-
-}
-
-
-function backspace(){
-
-  if(cur==='Error'){
-
-    clearCalc();
-
-    return;
-
-  }
-
-  if(cur.length>1)
-
-    cur=cur.slice(0,-1);
-
-  else
-
-    cur='0';
-
-  refresh();
-
-}
-
-
-function percent(){
-
-  if(cur==='Error'){
-
-    clearCalc();
-
-    return;
-
-  }
-
-  cur=fmt(parseFloat(cur)/100);
-
-  $('expr').textContent='Percentage';
-
-  refresh();
-
-}
-
-
-/*
-====================================================
- TOOLS
-====================================================
-*/
-
-function openTool(t){
-
-  ['gst','discount','qty']
-  .forEach(
-    x=>$(x+'Tool').hidden=x!==t
-  );
-
-
-  $('modalTitle').textContent =
-    t==='gst'
-      ? 'GST Calculator'
-      : t==='discount'
-        ? 'Discount Calculator'
-        : 'Quantity × Rate';
-
-
-  $('modal').classList.add('show');
-
-}
-
-
-function closeTool(){
-
-  $('modal').classList.remove('show');
-
-}
-
-
-$('modal').addEventListener(
-  'click',
-  e=>{
-    if(e.target===$('modal'))
-      closeTool();
-  }
-);
-
-
-function toolGST(){
-
-  let a=+$('toolGstAmount').value;
-
-  let r=+$('toolGstRate').value;
-
-
-  if(!a)
-
-    return alert(
-      'Enter amount.'
-    );
-
-
-  let g=a*r/100;
-
-  let t=a+g;
-
-
-  $('toolGstOut').innerHTML =
-    `GST: ${money(g)}<br>Total: ${money(t)}`;
-
-
-  setTotal(t);
-
-}
-
-
-function toolDiscount(){
-
-  let a=+$('toolDiscAmount').value;
-
-  let r=+$('toolDiscRate').value;
-
-
-  if(!a)
-
-    return alert(
-      'Enter amount.'
-    );
-
-
-  let d=a*r/100;
-
-  let t=a-d;
-
-
-  $('toolDiscOut').innerHTML =
-    `Discount: ${money(d)}<br>Final: ${money(t)}`;
-
-
-  setTotal(t);
-
-}
-
-
-function toolQty(){
-
-  let q=+$('toolQty').value;
-
-  let r=+$('toolRate').value;
-
-
-  if(!q || !r)
-
-    return alert(
-      'Enter quantity and rate.'
-    );
-
-
-  let t=q*r;
-
-
-  $('toolQtyOut').textContent =
-    `Total: ${money(t)}`;
-
-
-  setTotal(t);
-
-}
-
-
-function setTotal(t){
-
-  cur=fmt(t);
-
-  reset=true;
-
-  refresh();
-
-  closeTool();
-
-}
-
-
-/*
-====================================================
- BILL ITEMS
-====================================================
-*/
-
-function addCurrentItem(){
-
-  let rate=parseFloat(cur);
-
-
-  if(
-    !isFinite(rate) ||
-    rate<=0
-  )
-
-    return alert(
-      'Enter a valid rate/amount first.'
-    );
-
-
-  items.push({
-
-    name:
-      'Item ' +
-      (items.length+1),
-
-    qty:1,
-
-    rate:rate
-
-  });
-
-
-  renderBill();
-
-}
-
-
-function addItem(){
-
-  items.push({
-
-    name:'New Item',
-
-    qty:1,
-
-    rate:0
-
-  });
-
-
-  renderBill();
-
-}
-
-
-function clearItems(){
-
-  items=[];
-
-  renderBill();
-
-}
-
-
-function renderBill(){
-
-  const box=$('items');
-
-  box.innerHTML='';
-
-
-  if(!items.length){
-
-    box.innerHTML =
-      '<div class="empty" style="padding:14px">No items. Use “Add Item” or enter an item below.</div>';
-
-    addItem();
-
-    return;
-
-  }
-
-
-  items.forEach(
-    (it,i)=>{
-
-      const row=
-        document.createElement('div');
-
-      row.className='item';
-
-
-      row.innerHTML=
-
-        `<input
-          value="${escapeHtml(it.name)}"
-          onchange="items[${i}].name=this.value"
-        >
-
-        <input
-          type="number"
-          min="0"
-          value="${it.qty}"
-          onchange="items[${i}].qty=+this.value;renderBill()"
-        >
-
-        <input
-          type="number"
-          min="0"
-          value="${it.rate}"
-          onchange="items[${i}].rate=+this.value;renderBill()"
-        >
-
-        <strong>
-          ${money(it.qty*it.rate)}
-        </strong>
-
-        <button
-          class="remove"
-          onclick="items.splice(${i},1);renderBill()"
-        >
-          ×
-        </button>`;
-
-
-      box.appendChild(row);
-
-    }
-  );
-
-
-  const sub =
-    items.reduce(
-      (s,x)=>
-        s+
-        (+x.qty||0)*
-        (+x.rate||0),
-      0
-    );
-
-
-  const dr =
-    Math.max(
-      0,
-      +$('billDiscount').value||0
-    );
-
-
-  const d=sub*dr/100;
-
-  const base=sub-d;
-
-
-  const gr =
-    Math.max(
-      0,
-      +$('billGst').value||0
-    );
-
-
-  const g=base*gr/100;
-
-  const total=base+g;
-
-
-  $('sub').textContent=money(sub);
-
-  $('disc').textContent=money(d);
-
-  $('gst').textContent=money(g);
-
-  $('grand').textContent=money(total);
-
-
-  cur=fmt(total);
-
-  updatePayment();
-
-}
-
-
-function escapeHtml(s){
-
-  return String(s).replace(
-    /[&<>"']/g,
-    m=>({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#039;'
-    }[m])
-  );
-
-}
-
-
-/*
-====================================================
- BILL DATA
-====================================================
-*/
-
-function billData(){
-
-  let sub =
-    items.reduce(
-      (s,x)=>
-        s+
-        (+x.qty||0)*
-        (+x.rate||0),
-      0
-    );
-
-
-  let dr=
-    +$('billDiscount').value||0;
-
-
-  let d=sub*dr/100;
-
-
-  let gr=
-    +$('billGst').value||0;
-
-
-  let g=(sub-d)*gr/100;
-
-
-  return{
-
-    customer:
-      $('customer').value ||
-      'Walk-in Customer',
-
-    mobile:
-      $('mobile').value,
-
-    invoice:
-      $('invoiceNo').value,
-
-    date:
-      $('billDate').value,
-
-    items:
-      JSON.parse(
-        JSON.stringify(items)
-      ),
-
-    subtotal:sub,
-
-    discount:d,
-
-    gst:g,
-
-    total:
-      sub-d+g
-
-  };
-
-}
-
-
-/*
-====================================================
- BILL HISTORY
-====================================================
-*/
-
-function saveBill(){
-
-  const b=billData();
-
-
-  let h=
-    JSON.parse(
-      localStorage.getItem(
-        'smart_bills'
-      )||'[]'
-    );
-
-
-  h.unshift({
-
-    ...b,
-
-    savedAt:
-      new Date().toISOString()
-
-  });
-
-
-  h=h.slice(0,50);
-
-
-  localStorage.setItem(
-    'smart_bills',
-    JSON.stringify(h)
-  );
-
-
-  renderHistory();
-
-
-  alert(
-    'Bill saved successfully.'
-  );
-
-}
-
-
-function addHistory(e,r){
-
-  let history =
-    JSON.parse(
-      localStorage.getItem(
-        'smart_calc_history'
-      )||'[]'
-    );
-
-
-  history.unshift({
-
-    expression:e,
-
-    result:r,
-
-    time:
-      new Date().toLocaleString(
-        'en-IN'
-      )
-
-  });
-
-
-  history=
-    history.slice(0,100);
-
-
-  localStorage.setItem(
-    'smart_calc_history',
-    JSON.stringify(history)
-  );
-
-}
-
-
-function renderHistory(){
-
-  let h=
-    JSON.parse(
-      localStorage.getItem(
-        'smart_bills'
-      )||'[]'
-    );
-
-
-  let box=$('history');
-
-
-  if(!h.length){
-
-    box.innerHTML=
-      '<div class="empty">No saved bills yet.</div>';
-
-    return;
-
-  }
-
-
-  box.innerHTML=
-    h.map(
-      b=>
-
-      `<div class="hist">
-
-        <span>
-
-          <strong>
-            ${escapeHtml(b.invoice)}
-          </strong>
-
-          •
-          ${escapeHtml(b.customer)}
-
-          <br>
-
-          <span class="muted">
-            ${b.date||''}
-          </span>
-
-        </span>
-
-        <strong>
-          ${money(b.total)}
-        </strong>
-
-      </div>`
-
-    ).join('');
-
-}
-
-
-function clearHistory(){
-
-  if(
-    confirm(
-      'Delete all saved bills?'
-    )
-  ){
-
-    localStorage.removeItem(
-      'smart_bills'
-    );
-
-    renderHistory();
-
-  }
-
-}
-
-
-/*
-====================================================
- NEW BILL
-====================================================
-*/
-
-function newBill(){
-
-  if(
-    !confirm(
-      'Start a new bill?'
-    )
-  )
-
-    return;
-
-
-  $('customer').value='';
-
-  $('mobile').value='';
-
-  $('invoiceNo').value=
-    invoice();
-
-  $('billDate').value=
-    new Date()
-      .toISOString()
-      .slice(0,10);
-
-  $('billDiscount').value=0;
-
-  $('billGst').value=18;
-
-  items=[];
-
-  renderBill();
-
-  clearCalc();
-
-}
-
-
-/*
-====================================================
- UPI
-====================================================
-*/
-
-function updateUPI(){
-
-  upi=
-    $('upiInput')
-      .value
-      .trim();
-
-
-  $('upiDisplay')
-    .textContent=
-    upi ||
-    'YOURUPIID@upi';
-
-
-  localStorage.setItem(
-    'smart_upi',
-    upi
-  );
-
-
-  updatePayment();
-
-}
-
-
-function upiLink(){
-
-  const b=billData();
-
-
-  return `upi://pay?pa=${
-    encodeURIComponent(upi)
-  }&pn=${
-    encodeURIComponent(
-      'Smart Calculation'
-    )
-  }&am=${
-    b.total.toFixed(2)
-  }&cu=INR&tn=${
-    encodeURIComponent(
-      'Invoice '+b.invoice
-    )
-  }`;
-
-}
-
-
-function updatePayment(){
-
-  let b=billData();
-
-  let a=b.total;
-
-
-  $('upiAmount')
-    .textContent=
-    a.toFixed(2);
-
-
-  let q=$('qrcode');
-
-  q.innerHTML='';
-
-
-  if(a<=0){
-
-    q.innerHTML=
-      '<span class="muted">Enter bill amount</span>';
-
-    return;
-
-  }
-
-
-  if(
-    typeof QRCode==='undefined'
-  ){
-
-    q.innerHTML=
-      '<span class="muted">QR library unavailable</span>';
-
-    return;
-
-  }
-
-
-  if(!upi){
-
-    q.innerHTML=
-      '<span class="muted">Enter UPI ID</span>';
-
-    return;
-
-  }
-
-
-  new QRCode(
-    q,
-    {
-      text:upiLink(),
-      width:190,
-      height:190,
-      correctLevel:
-        QRCode.CorrectLevel.H
-    }
-  );
-
-}
-
-
-function payNow(){
-
-  let b=billData();
-
-
-  if(b.total<=0)
-
-    return alert(
-      'Enter items and amount first.'
-    );
-
-
-  if(!upi)
-
-    return alert(
-      'Enter your UPI ID first.'
-    );
-
-
-  location.href=
-    upiLink();
-
-}
-
-
-async function sharePayment(){
-
-  let b=billData();
-
-
-  if(b.total<=0)
-
-    return alert(
-      'Enter bill amount first.'
-    );
-
-
-  let text=
-    `Payment Request
-Smart Calculation
-Invoice: ${b.invoice}
-Amount: ${money(b.total)}
-UPI ID: ${upi}`;
-
-
-  if(
-    navigator.share
-  ){
-
-    try{
-
-      await navigator.share({
-
-        title:
-          'Smart Calculation Payment',
-
-        text,
-
-        url:
-          upiLink()
-
-      });
-
-    }
-
-    catch(e){}
-
-  }
-
-  else{
-
-    await navigator.clipboard?.writeText(text);
-
-    alert(
-      'Payment details copied.'
-    );
-
-  }
-
-}
-
-
-function shareBill(){
-
-  let b=billData();
-
-
-  let text=
-    `Smart Calculation
-Invoice: ${b.invoice}
-Customer: ${b.customer}
-Total: ${money(b.total)}
-UPI: ${upi}`;
-
-
-  if(navigator.share){
-
-    navigator.share({
-
-      title:
-        'Smart Calculation Bill',
-
-      text
-
-    });
-
-  }
-
-  else{
-
-    navigator.clipboard?.writeText(text);
-
-    alert(
-      'Bill details copied.'
-    );
-
-  }
-
-}
-
-
-/*
-====================================================
- PRINT INVOICE
-====================================================
-*/
-
-function printInvoice(){
-
-  const b=billData();
-
-
-  const rows=
-    b.items.map(
-      x=>
-
-      `<tr>
-
-        <td>
-          ${escapeHtml(x.name)}
-        </td>
-
-        <td>
-          ${x.qty}
-        </td>
-
-        <td class="right">
-          ${money(x.rate)}
-        </td>
-
-        <td class="right">
-          ${money(x.qty*x.rate)}
-        </td>
-
-      </tr>`
-
-    ).join('');
-
-
-  const w=
-    window.open(
-      '',
-      '_blank'
-    );
-
-
-  if(!w)
-
-    return alert(
-      'Allow pop-ups to print invoice.'
-    );
-
-
-  w.document.write(
-
-    `<html>
-
-      <head>
-
-        <title>
-          ${b.invoice}
-        </title>
-
-        <style>
-
-          body{
-            font-family:Arial;
-            padding:30px
-          }
-
-          .invoice{
-            max-width:800px;
-            margin:auto
-          }
-
-          table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:20px
-          }
-
-          th,td{
-            border-bottom:1px solid #ddd;
-            padding:8px;
-            text-align:left
-          }
-
-          .right{
-            text-align:right
-          }
-
-          .total{
-            font-size:20px;
-            font-weight:bold;
-            text-align:right;
-            margin-top:15px
-          }
-
-        </style>
+<script> "use strict"; /* ==================================================== HELPER ==================================================== */ const $ = id => document.getElementById(id); /* ==================================================== MONEY FORMAT ==================================================== */ function money(n){ return "₹" + Number(n || 0).toLocaleString( "en-IN", { minimumFractionDigits:2, maximumFractionDigits:2 } ); } /* ==================================================== CALCULATOR VARIABLES ==================================================== */ let cur="0"; let prev=null; let oper=null; let reset=false; let items=[]; /* ==================================================== UPI ==================================================== */ let upi= localStorage.getItem("smart_upi") || "satyendra6528@ybl"; /* ==================================================== DATE + INVOICE ==================================================== */ function invoice(){ return "KT-" + Date.now() .toString() .slice(-7); } /* ==================================================== SAFE NUMBER FORMAT ==================================================== */ function fmt(n){ const number= Number(n); if(!Number.isFinite(number)) return "0"; return Number( number.toFixed(10) ).toString(); } /* ==================================================== CALCULATOR DISPLAY ==================================================== */ function refresh(){ $("display").textContent=cur; updatePayment(); } /* ==================================================== NUMBER ==================================================== */ function num(v){ if( cur==="0" || reset || cur==="Error" ){ cur=v; reset=false; }else if(cur.length<18){ if(v==="00" && cur==="0") return; cur+=v; } refresh(); } /* ==================================================== DECIMAL ==================================================== */ function dot(){ if(cur==="Error"){ cur="0."; reset=false; }else if(reset){ cur="0."; reset=false; }else if(!cur.includes(".")){ cur+="."; } refresh(); } /* ==================================================== OPERATOR ==================================================== */ function op(o){ if(cur==="Error"){ clearCalc(); return; } if( prev!==null && oper && !reset ){ equal(); } prev=parseFloat(cur); oper=o; reset=true; $("expr").textContent= fmt(prev) + " " + ({ "/":"÷", "*":"×", "-":"−", "+":"+" }[o] || o); } /* ==================================================== EQUAL ==================================================== */ function equal(){ if( prev===null || !oper ){ return; } const b= parseFloat(cur); const a=prev; let r; switch(oper){ case "+": r=a+b; break; case "-": r=a-b; break; case "*": r=a*b; break; case "/": r=b===0 ? NaN : a/b; break; default: return; } if(!Number.isFinite(r)){ cur="Error"; prev=null; oper=null; reset=true; refresh(); return; } const symbol= ({ "/":"÷", "*":"×", "-":"−", "+":"+" }[oper]); const expression= `${fmt(a)} ${symbol} ${fmt(b)}`; cur=fmt(r); $("expr").textContent= expression + " ="; addHistory( expression, cur ); prev=null; oper=null; reset=true; refresh(); } /* ==================================================== CLEAR ==================================================== */ function clearCalc(){ cur="0"; prev=null; oper=null; reset=false; $("expr").textContent=""; refresh(); } /* ==================================================== BACKSPACE ==================================================== */ function backspace(){ if(cur==="Error"){ clearCalc(); return; } if(reset){ return; } if(cur.length>1){ cur=cur.slice(0,-1); }else{ cur="0"; } refresh(); } /* ==================================================== PERCENT ==================================================== */ function percent(){ if(cur==="Error"){ clearCalc(); return; } cur=fmt( parseFloat(cur)/100 ); $("expr").textContent= "Percentage"; reset=true; refresh(); } /* ==================================================== TOOLS ==================================================== */ function openTool(t){ [ "gst", "discount", "qty" ].forEach( x=>{ const el=$(x+"Tool"); if(el) el.hidden=x!==t; } ); $("modalTitle").textContent= t==="gst" ? "GST Calculator" : t==="discount" ? "Discount Calculator" : "Quantity × Rate"; $("modal").classList.add("show"); } function closeTool(){ $("modal").classList.remove("show"); } $("modal").addEventListener( "click", e=>{ if(e.target === $("modal")) closeTool(); } ); /* ==================================================== GST TOOL ==================================================== */ function toolGST(){ const a= parseFloat( $("toolGstAmount").value ); const r= parseFloat( $("toolGstRate").value ); if( !Number.isFinite(a) || a<0 ){ alert("Enter a valid amount."); return; } const g= a*r/100; const t= a+g; $("toolGstOut").innerHTML= `GST: ${money(g)}<br>Total: ${money(t)}`; setTotal(t); } /* ==================================================== DISCOUNT TOOL ==================================================== */ function toolDiscount(){ const a= parseFloat( $("toolDiscAmount").value ); const r= parseFloat( $("toolDiscRate").value ); if( !Number.isFinite(a) || a<0 ){ alert("Enter a valid amount."); return; } const d= a*r/100; const t= a-d; $("toolDiscOut").innerHTML= `Discount: ${money(d)}<br>Final: ${money(t)}`; setTotal(t); } /* ==================================================== QUANTITY × RATE ==================================================== */ function calculateQtyRate(){ const q= parseFloat( $("toolQty").value ); const r= parseFloat( $("toolRate").value ); if( !Number.isFinite(q) || !Number.isFinite(r) || q<0 || r<0 ){ alert( "Enter valid quantity and rate." ); return; } const t=q*r; $("toolQtyOut").textContent= `Total: ${money(t)}`; setTotal(t); } /* ==================================================== SET TOTAL ==================================================== */ function setTotal(t){ cur=fmt(t); reset=true; refresh(); closeTool(); } /* ==================================================== BILL ITEMS ==================================================== */ function addCurrentItem(){ const rate= parseFloat(cur); if( !Number.isFinite(rate) || rate<=0 ){ alert( "Enter a valid rate/amount first." ); return; } items.push({ name: "Item " + (items.length+1), qty:1, rate:rate }); renderBill(); } function addItem(){ items.push({ name: "New Item", qty:1, rate:0 }); renderBill(); } function clearItems(){ items=[]; renderBill(); } /* ==================================================== ESCAPE HTML ==================================================== */ function escapeHtml(s){ return String(s ?? "") .replace( /[&<>"']/g, m=>({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[m]) ); } /* ==================================================== RENDER BILL ==================================================== */ function renderBill(){ const box=$("items"); if(!box) return; box.innerHTML=""; if(!items.length){ const empty= document.createElement("div"); empty.className="empty"; empty.style.padding="14px"; empty.textContent= "No items. Add an item to begin."; box.appendChild(empty); }else{ items.forEach( (it,i)=>{ const row= document.createElement("div"); row.className="item"; const nameInput= document.createElement("input"); nameInput.value= it.name || ""; nameInput.addEventListener( "change", ()=>{ items[i].name= nameInput.value; } ); const qtyInput= document.createElement("input"); qtyInput.type="number"; qtyInput.min="0"; qtyInput.value= it.qty; qtyInput.addEventListener( "input", ()=>{ items[i].qty= Math.max( 0, parseFloat( qtyInput.value ) || 0 ); renderBill(); } ); const rateInput= document.createElement("input"); rateInput.type="number"; rateInput.min="0"; rateInput.value= it.rate; rateInput.addEventListener( "input", ()=>{ items[i].rate= Math.max( 0, parseFloat( rateInput.value ) || 0 ); renderBill(); } ); const total= document.createElement("strong"); total.textContent= money( (+it.qty||0)* (+it.rate||0) ); const remove= document.createElement("button"); remove.className="remove"; remove.type="button"; remove.textContent="×"; remove.addEventListener( "click", ()=>{ items.splice(i,1); renderBill(); } ); row.appendChild(nameInput); row.appendChild(qtyInput); row.appendChild(rateInput); row.appendChild(total); row.appendChild(remove); box.appendChild(row); } ); } calculateBillTotals(); } /* ==================================================== BILL TOTALS ==================================================== */ function calculateBillTotals(){ const sub= items.reduce( (s,x)=> s+ (+x.qty||0)* (+x.rate||0), 0 ); const dr= Math.max( 0, parseFloat( $("billDiscount").value ) || 0 ); const d= sub*dr/100; const base= Math.max( 0, sub-d ); const gr= Math.max( 0, parseFloat( $("billGst").value ) || 0 ); const g= base*gr/100; const total= base+g; $("sub").textContent= money(sub); $("disc").textContent= money(d); $("gst").textContent= money(g); $("grand").textContent= money(total); cur=fmt(total); updatePayment(); return { subtotal:sub, discount:d, gst:g, total:total }; } /* ==================================================== BILL DATA ==================================================== */ function billData(){ const totals= calculateBillTotals(); return { customer: $("customer").value.trim() || "Walk-in Customer", mobile: $("mobile").value.trim(), invoice: $("invoiceNo").value.trim() || invoice(), date: $("billDate").value, items: JSON.parse( JSON.stringify(items) ), subtotal: totals.subtotal, discount: totals.discount, gst: totals.gst, total: totals.total }; } /* ==================================================== BILL HISTORY ==================================================== */ function saveBill(){ const b=billData(); if( !b.items.length || b.total<=0 ){ alert( "Please add at least one item with a valid rate." ); return; } let h= JSON.parse( localStorage.getItem( "smart_bills" ) || "[]" ); h.unshift({ ...b, savedAt: new Date().toISOString() }); h=h.slice(0,50); localStorage.setItem( "smart_bills", JSON.stringify(h) ); renderHistory(); alert( "Bill saved successfully." ); } function addHistory(e,r){ let history= JSON.parse( localStorage.getItem( "smart_calc_history" ) || "[]" ); history.unshift({ expression:e, result:r, time: new Date().toLocaleString( "en-IN" ) }); history= history.slice(0,100); localStorage.setItem( "smart_calc_history", JSON.stringify(history) ); } function renderHistory(){ const h= JSON.parse( localStorage.getItem( "smart_bills" ) || "[]" ); const box=$("history"); if(!h.length){ box.innerHTML= '<div class="empty">No saved bills yet.</div>'; return; } box.innerHTML= h.map( b=> `<div class="hist"> <span> <strong> ${escapeHtml(b.invoice)} </strong> • ${escapeHtml(b.customer)} <br> <span class="muted"> ${escapeHtml(b.date || "")} </span> </span> <strong> ${money(b.total)} </strong> </div>` ).join(""); } function clearHistory(){ if( confirm( "Delete all saved bills?" ) ){ localStorage.removeItem( "smart_bills" ); renderHistory(); } } /* ==================================================== NEW BILL ==================================================== */ function newBill(){ if( !confirm( "Start a new bill?" ) ){ return; } $("customer").value=""; $("mobile").value=""; $("invoiceNo").value= invoice(); $("billDate").value= new Date() .toISOString() .slice(0,10); $("billDiscount").value="0"; $("billGst").value="18"; items=[]; renderBill(); clearCalc(); } /* ==================================================== UPI ==================================================== */ function updateUPI(){ upi= $("upiInput") .value .trim(); $("upiDisplay").textContent= upi || "YOURUPIID@upi"; if(upi){ localStorage.setItem( "smart_upi", upi ); }else{ localStorage.removeItem( "smart_upi" ); } updatePayment(); } function upiLink(){ const b=billData(); return `upi://pay?pa=${ encodeURIComponent(upi) }&pn=${ encodeURIComponent( "Kushwaha Traders" ) }&am=${ Number(b.total).toFixed(2) }&cu=INR&tn=${ encodeURIComponent( "Invoice "+b.invoice ) }`; } /* ==================================================== UPDATE UPI PAYMENT ==================================================== */ function updatePayment(){ const b= calculateBillTotalsWithoutRefresh(); const a=b.total; const amountEl= $("upiAmount"); if(amountEl){ amountEl.textContent= a.toFixed(2); } const q= $("qrcode"); if(!q) return; q.innerHTML=""; if( a<=0 ){ q.innerHTML= '<span class="muted">Enter bill amount</span>'; return; } if( typeof QRCode==="undefined" ){ q.innerHTML= '<span class="muted">QR library unavailable</span>'; return; } if(!upi){ q.innerHTML= '<span class="muted">Enter UPI ID</span>'; return; } try{ new QRCode( q, { text:upiLinkFromTotals(b), width:190, height:190, correctLevel: QRCode.CorrectLevel.H } ); }catch(error){ console.error( "QR generation error:", error ); q.innerHTML= '<span class="muted">Unable to generate QR</span>'; } } /* Calculates totals without calling updatePayment again. */ function calculateBillTotalsWithoutRefresh(){ const sub= items.reduce( (s,x)=> s+ (+x.qty||0)* (+x.rate||0), 0 ); const dr= Math.max( 0, parseFloat( $("billDiscount").value ) || 0 ); const discount= sub*dr/100; const base= Math.max( 0, sub-discount ); const gr= Math.max( 0, parseFloat( $("billGst").value ) || 0 ); const gst= base*gr/100; return { subtotal:sub, discount:discount, gst:gst, total:base+gst }; } function upiLinkFromTotals(b){ return `upi://pay?pa=${ encodeURIComponent(upi) }&pn=${ encodeURIComponent( "Kushwaha Traders" ) }&am=${ Number(b.total).toFixed(2) }&cu=INR&tn=${ encodeURIComponent( "Invoice "+ ($("invoiceNo").value.trim() || "Payment") ) }`; } /* ==================================================== PAY NOW ==================================================== */ function payNow(){ const b=billData(); if(b.total<=0){ alert( "Enter items and amount first." ); return; } if(!upi){ alert( "Enter your UPI ID first." ); return; } window.location.href= upiLinkFromTotals(b); } /* ==================================================== SHARE PAYMENT ==================================================== */ async function sharePayment(){ const b=billData(); if(b.total<=0){ alert( "Enter bill amount first." ); return; } const text= `Payment Request Kushwaha Traders Invoice: ${b.invoice} Amount: ${money(b.total)} UPI ID: ${upi}`; if( navigator.share ){ try{ await navigator.share({ title: "Smart Calculator Payment", text:text, url: upiLinkFromTotals(b) }); }catch(e){ console.log( "Share cancelled" ); } }else{ try{ await navigator.clipboard.writeText( text ); alert( "Payment details copied." ); }catch(e){ alert(text); } } } /* ==================================================== SHARE BILL ==================================================== */ async function shareBill(){ const b=billData(); const text= `Kushwaha Traders Smart Calculation Invoice: ${b.invoice} Customer: ${b.customer} Total: ${money(b.total)} UPI: ${upi}`; if( navigator.share ){ try{ await navigator.share({ title: "Smart Calculation Bill", text:text }); }catch(e){ console.log( "Share cancelled" ); } }else{ try{ await navigator.clipboard.writeText( text ); alert( "Bill details copied." ); }catch(e){ alert(text); } } } /* ==================================================== PRINT INVOICE ==================================================== */ function printInvoice(){ const b=billData(); if( !b.items.length ){ alert( "Please add items before printing." ); return; } const rows= b.items.map( x=> `<tr> <td> ${escapeHtml(x.name)} </td> <td> ${x.qty} </td> <td class="right"> ${money(x.rate)} </td> <td class="right"> ${money(x.qty*x.rate)} </td> </tr>` ).join(""); const w= window.open( "", "_blank" ); if(!w){ alert( "Allow pop-ups to print invoice." ); return; } w.document.write( `<html> <head> <title> ${escapeHtml(b.invoice)} </title> <style> body{ font-family:Arial,sans-serif; padding:30px; color:#111; } .invoice{ max-width:800px; margin:auto; } h1{ margin-bottom:4px; } table{ width:100%; border-collapse:collapse; margin-top:20px; } th,td{ border-bottom:1px solid #ddd; padding:8px; text-align:left; } .right{ text-align:right; } .total{ font-size:20px; font-weight:bold; text-align:right; margin-top:15px; line-height:1.7; } .brand{ font-size:13px; color:#555; } </style>
 
   </head>
 
@@ -2959,11 +787,11 @@ function printInvoice(){
     <div class="invoice">
 
       <h1>
-        Smart Calculation
+        KUSHWAHA TRADERS
       </h1>
 
-      <p>
-        Business Invoice
+      <p class="brand">
+        Smart Calculation • Business Invoice
       </p>
 
       <hr>
@@ -2971,12 +799,12 @@ function printInvoice(){
       <p>
 
         <b>Invoice:</b>
-        ${b.invoice}
+        ${escapeHtml(b.invoice)}
 
         <br>
 
         <b>Date:</b>
-        ${b.date}
+        ${escapeHtml(b.date)}
 
         <br>
 
@@ -2989,7 +817,6 @@ function printInvoice(){
         ${escapeHtml(b.mobile)}
 
       </p>
-
 
       <table>
 
@@ -3005,7 +832,6 @@ function printInvoice(){
         ${rows}
 
       </table>
-
 
       <p class="total">
 
@@ -3029,27 +855,27 @@ function printInvoice(){
 
       </p>
 
-
       <p>
-        UPI:
+        <b>UPI:</b>
         ${escapeHtml(upi)}
       </p>
 
     </div>
 
-
     <script>
 
-      window.onload=()=>{
+      window.onload=function(){
 
         window.print();
 
         setTimeout(
-          ()=>window.close(),
-          500
+          function(){
+            window.close();
+          },
+          700
         );
 
-      }
+      };
 
     <\/script>
 
@@ -3063,153 +889,204 @@ w.document.close();
 
 }
 
-# /*
-
-# DARK MODE
-
-*/
+/* ====================================================
+DARK MODE
+==================================================== */
 
 function toggleDark(){
 
 document.body.classList.toggle(
-'dark'
+"dark"
 );
 
 localStorage.setItem(
-'smart_dark',
+"smart_dark",
 document.body.classList.contains(
-'dark'
-)
-? '1'
-: '0'
+"dark"
+) ? "1" : "0"
 );
 
 }
 
 if(
 localStorage.getItem(
-'smart_dark'
-)==='1'
+"smart_dark"
+)==="1"
 ){
 
 document.body.classList.add(
-'dark'
+"dark"
 );
 
 }
 
-# /*
-
-# KEYBOARD
-
-*/
+/* ====================================================
+KEYBOARD
+==================================================== */
 
 document.addEventListener(
-'keydown',
+"keydown",
 e=>{
 
+/*
+  Do not hijack keyboard input
+  when the user is typing in a form.
+*/
+
+const tag=
+  e.target.tagName;
+
+const isInput=
+  tag==="INPUT" ||
+  tag==="SELECT" ||
+  tag==="TEXTAREA";
+
+if(isInput)
+  return;
+
 if(
-  e.key>='0' &&
-  e.key<='9'
-)
+  e.key>="0" &&
+  e.key<="9"
+){
+
+  e.preventDefault();
 
   num(e.key);
 
-else if(
-  e.key==='.'
-)
+}else if(
+  e.key=="."
+){
+
+  e.preventDefault();
 
   dot();
 
-else if(
-  '+-*/'.includes(e.key)
-)
+}else if(
+  "+-*/".includes(e.key)
+){
+
+  e.preventDefault();
 
   op(e.key);
 
-else if(
-  e.key==='Enter' ||
-  e.key==='='
-)
+}else if(
+  e.key==="Enter" ||
+  e.key==="="
+){
+
+  e.preventDefault();
 
   equal();
 
-else if(
-  e.key==='Backspace'
-)
+}else if(
+  e.key==="Backspace"
+){
+
+  e.preventDefault();
 
   backspace();
 
-else if(
-  e.key==='Escape'
-)
+}else if(
+  e.key==="Escape"
+){
+
+  e.preventDefault();
 
   clearCalc();
 
-else if(
-  e.key==='%'
-)
+}else if(
+  e.key==="%"
+){
+
+  e.preventDefault();
 
   percent();
 
 }
+
+}
 );
 
-# /*
+/* ====================================================
+PWA INSTALL
+==================================================== */
 
-# PWA INSTALL
-
-*/
-
-let deferredPrompt;
+let deferredPrompt=null;
 
 window.addEventListener(
-'beforeinstallprompt',
+"beforeinstallprompt",
 e=>{
 
 e.preventDefault();
 
 deferredPrompt=e;
 
-$('installBtn')
-  .hidden=false;
+$("installBtn").hidden=false;
 
 }
 );
 
-$('installBtn').onclick=
+$("installBtn").addEventListener(
+"click",
 async()=>{
 
 if(!deferredPrompt)
-return;
+  return;
 
-deferredPrompt.prompt();
+try{
 
-deferredPrompt=null;
+  await deferredPrompt.prompt();
 
-$('installBtn')
-.hidden=true;
+  await deferredPrompt.userChoice;
 
-};
+}catch(error){
 
-# /*
+  console.log(
+    "Install prompt error:",
+    error
+  );
 
-# SERVICE WORKER
+}finally{
 
-*/
+  deferredPrompt=null;
+
+  $("installBtn").hidden=true;
+
+}
+
+}
+);
+
+/* ====================================================
+SERVICE WORKER
+==================================================== */
 
 if(
-'serviceWorker'
-in navigator
+"serviceWorker" in navigator
 ){
 
 window.addEventListener(
-'load',
+"load",
 ()=>{
 
   navigator.serviceWorker
-    .register('sw.js')
-    .catch(console.warn);
+    .register("sw.js")
+    .then(
+      registration=>{
+        console.log(
+          "Service Worker registered:",
+          registration.scope
+        );
+      }
+    )
+    .catch(
+      error=>{
+        console.warn(
+          "Service Worker registration failed:",
+          error
+        );
+      }
+    );
 
 }
 
@@ -3217,11 +1094,29 @@ window.addEventListener(
 
 }
 
-# /*
+/* ====================================================
+INITIALIZE
+==================================================== */
 
-# INITIALIZE
+function initializeApp(){
 
-*/
+$("upiInput").value=upi;
+
+$("upiDisplay").textContent=
+upi ||
+"YOURUPIID@upi";
+
+$("billDate").value=
+new Date()
+.toISOString()
+.slice(0,10);
+
+$("invoiceNo").value=
+invoice();
+
+$("billDiscount").value="0";
+
+$("billGst").value="18";
 
 items=[];
 
@@ -3229,9 +1124,31 @@ renderBill();
 
 renderHistory();
 
+cur="0";
+
 refresh();
+
+}
+
+/* ====================================================
+START APPLICATION
+==================================================== */
+
+if(
+document.readyState==="loading"
+){
+
+document.addEventListener(
+"DOMContentLoaded",
+initializeApp
+);
+
+}else{
+
+initializeApp();
+
+}
 
 </script>
 
-</body>
-</html>
+</body> </html>
