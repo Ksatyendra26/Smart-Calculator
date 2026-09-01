@@ -40,11 +40,11 @@ body.dark{--bg:#070b14;--card:#111827;--soft:#182131;--text:#f8fafc;--muted:#94a
 .login-gate{position:fixed;inset:0;z-index:999;background:linear-gradient(135deg,#0b1220,#1e3a8a);display:none;align-items:center;justify-content:center;padding:20px}.login-gate.show{display:flex}.gate-card{width:min(430px,100%);background:#fff;border-radius:28px;padding:28px;box-shadow:0 25px 70px #0005;text-align:center}.gate-logo{width:72px;height:72px;border-radius:20px;background:#2563eb;color:#fff;display:grid;place-items:center;font-size:34px;font-weight:900;margin:0 auto 14px}.gate-card h2{margin:0}.gate-card p{color:#64748b;font-size:13px;line-height:1.5}.gate-btn{display:block;width:100%;padding:14px;border:0;border-radius:13px;background:#2563eb;color:#fff;font-weight:900;font-size:15px;margin-top:14px}.gate-btn.secondary{background:#16a34a}.gate-msg{min-height:18px;color:#dc2626;font-size:12px;font-weight:700;margin-top:10px}</style>
 </head>
 <body>
-<div class="login-gate" id="loginGate"><div class="gate-card"><div class="gate-logo">₹</div><h2>SMART CALCULATOR</h2><p>Kushwaha Traders<br>Login is required to use the calculator and billing system.</p><button class="gate-btn" onclick="openAuth()">🔐 LOGIN / SIGN UP</button><div class="gate-msg" id="gateMsg"></div></div></div>
+<div class="login-gate" id="loginGate"><div class="gate-card"><div class="gate-logo">₹</div><h2>SMART CALCULATOR</h2><p>Kushwaha Traders<br>Login is required to use the calculator and billing system.</p><button class="gate-btn" onclick="window.location.href='login.html'">🔐 LOGIN / SIGN UP</button><div class="gate-msg" id="gateMsg"></div></div></div>
 <div class="app">
 <header>
   <div class="brand"><div class="brand-icon">₹</div><div><h1>SMART CALCULATOR</h1><p>Kushwaha Traders • Business Billing</p></div></div>
-  <div class="head-actions"><button class="icon" id="installBtn" title="Install" hidden>⬇️</button><button class="icon" onclick="toggleDark()" title="Theme">🌙</button></div>
+  <div class="head-actions"><button class="btn" onclick="logoutSmartCalculator()" title="Logout">🚪 Logout</button><button class="icon" id="installBtn" title="Install" hidden>⬇️</button><button class="icon" onclick="toggleDark()" title="Theme">🌙</button></div>
 </header>
 
 <div class="grid">
@@ -111,6 +111,40 @@ body.dark{--bg:#070b14;--card:#111827;--soft:#182131;--text:#f8fafc;--muted:#94a
   <div id="qtyTool" hidden><div class="field"><label>Quantity</label><input id="toolQty" type="number" value="1"></div><div class="field"><label>Rate ₹</label><input id="toolRate" type="number"></div><button class="btn primary" style="width:100%;margin-top:10px" onclick="toolQty()">Calculate</button><div class="tool-output" id="toolQtyOut"></div></div>
 </div></div>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+// ================= FIREBASE CONFIGURATION =================
+const firebaseConfig = {
+  apiKey: "AIzaSyDnSQRvLGVt7t4rsNwJ8i4bwnKkTZgw58Q",
+  authDomain: "smart-calculator-a2d0d.firebaseapp.com",
+  projectId: "smart-calculator-a2d0d",
+  storageBucket: "smart-calculator-a2d0d.firebasestorage.app",
+  messagingSenderId: "666337210440",
+  appId: "1:666337210440:web:66af57c60cc4b0bf29a87d"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const gate = document.getElementById('loginGate');
+
+// Require a real Firebase session.
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    gate.classList.remove('show');
+    localStorage.setItem('smart_logged_in', '1');
+  } else {
+    gate.classList.add('show');
+    localStorage.removeItem('smart_logged_in');
+  }
+});
+
+window.logoutSmartCalculator = async function(){
+  try { await signOut(auth); }
+  finally { window.location.href = 'login.html'; }
+};
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 const $=id=>document.getElementById(id), money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
