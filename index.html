@@ -2009,7 +2009,7 @@ title="Logout">
       <div class="pro-checkout-head">
         <div>
           <h3>Complete your Pro upgrade</h3>
-          <p>Review your account and choose a payment method.</p>
+          <p>Review your account and choose your UPI app.</p>
         </div>
         <button type="button" class="pro-back-btn" onclick="backToProPlans()">← Change plan</button>
       </div>
@@ -2021,24 +2021,13 @@ title="Logout">
         <div class="pro-account-row"><span>Amount</span><strong id="proCheckoutAmount">—</strong></div>
       </div>
 
-      <div class="pro-payment-title">💳 Select payment method</div>
-      <div class="pro-payment-methods">
-        <label class="pro-payment-option selected">
-          <input type="radio" name="proPaymentMethod" value="upi" checked onchange="setProPaymentMethod('upi')">
-          <span class="payment-icon">📱</span>
-          <span><strong>UPI</strong><small>Google Pay • PhonePe • Paytm & other UPI apps</small></span>
-        </label>
-        <label class="pro-payment-option">
-          <input type="radio" name="proPaymentMethod" value="card" onchange="setProPaymentMethod('card')">
-          <span class="payment-icon">💳</span>
-          <span><strong>Debit / Credit Card</strong><small>Visa • Mastercard • RuPay</small></span>
-        </label>
-        <label class="pro-payment-option">
-          <input type="radio" name="proPaymentMethod" value="netbanking" onchange="setProPaymentMethod('netbanking')">
-          <span class="payment-icon">🏦</span>
-          <span><strong>Net Banking</strong><small>Pay securely through your bank</small></span>
-        </label>
+      <div class="pro-payment-title">📱 Pay with UPI</div>
+      <div class="pro-upi-apps" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px">
+        <button type="button" class="pro-upi-app-btn" onclick="payWithUpiApp('gpay')">🟢 Google Pay</button>
+        <button type="button" class="pro-upi-app-btn" onclick="payWithUpiApp('phonepe')">🟣 PhonePe</button>
+        <button type="button" class="pro-upi-app-btn" onclick="payWithUpiApp('paytm')">🔵 Paytm</button>
       </div>
+      <div class="pro-secure-note" style="margin-top:0">💰 <strong>UPI payment</strong><br>Select your app above. The payment request will use the corresponding UPI ID configured for that app.</div>
 
       <div class="pro-buyer-details">
         <div class="pro-payment-title">📋 Billing / contact details</div>
@@ -2050,8 +2039,7 @@ title="Logout">
         </div>
       </div>
 
-      <div class="pro-secure-note">🔒 <strong>Secure checkout by Razorpay</strong><br>You will be taken to Razorpay's secure payment page. Your card, UPI and banking credentials are entered only on Razorpay. Never enter your card PIN, UPI PIN, OTP or banking password on Smart Calculator.</div>
-      <button type="button" class="pro-checkout-btn" onclick="proceedToPayment()">Proceed to Secure Payment</button>
+      <div class="pro-secure-note">🔒 <strong>Safe UPI payment</strong><br>Choose Google Pay, PhonePe or Paytm above. Never enter your UPI PIN, OTP, card PIN or banking password on Smart Calculator.</div>
     </div>
 
     <div class="pro-modal-foot"><strong>Secure payment</strong> • Your Pro access will be activated after payment verification.</div>
@@ -4325,56 +4313,51 @@ window.setProPaymentMethod=function(method){
   document.querySelectorAll(".pro-payment-option").forEach(el=>el.classList.toggle("selected",el.querySelector("input")?.value===method));
 };
 /* =========================================================
-   PRO PAYMENT CONFIGURATION
+   PRO UPI PAYMENT CONFIGURATION
    ---------------------------------------------------------
-   For a simple GitHub Pages setup, use Razorpay Payment Links.
-   Create ONE LIVE Payment Link for ₹99 and ONE LIVE Payment Link
-   for ₹799 in your Razorpay Dashboard, then paste the two URLs below.
+   Payments are sent directly to the UPI IDs supplied by the owner.
+   No card, net-banking or Razorpay payment method is shown here.
 
-   IMPORTANT:
-   - Do NOT put Razorpay Key Secret, bank password, UPI PIN or OTP here.
-   - Payment Links are hosted by Razorpay. The customer completes payment
-     on Razorpay, and captured funds are settled to the bank account
-     registered with your Razorpay merchant account.
-   - Payment Links are one-time payments. Automatic recurring monthly
-     billing requires Razorpay Subscriptions + a secure server.
+   Google Pay : satyendra1062000-3@oksbi
+   PhonePe    : satyendra6528@ybl
+   Paytm      : 6388026885@ptaxis
+
+   Never collect or store a UPI PIN, OTP, card number or banking password.
 ========================================================= */
-window.PRO_PAYMENT_CONFIG={
-  monthlyLink:"", // Example: https://rzp.io/rzp/XXXXXXXX
-  yearlyLink:""   // Example: https://rzp.io/rzp/YYYYYYYY
+window.PRO_UPI_CONFIG={
+  gpay:"satyendra1062000-3@oksbi",
+  phonepe:"satyendra6528@ybl",
+  paytm:"6388026885@ptaxis"
 };
 
-window.proceedToPayment=function(){
-  const name=$("proBuyerName")?.value.trim();
-  const mobile=$("proBuyerMobile")?.value.trim();
-  const email=$("proBuyerEmail")?.value.trim();
-  if(!name){alert("Please enter your name.");$("proBuyerName")?.focus();return;}
-  if(mobile && !/^\d{10}$/.test(mobile)){alert("Please enter a valid 10-digit mobile number.");$("proBuyerMobile")?.focus();return;}
-  if(!email || !/^\S+@\S+\.\S+$/.test(email)){alert("Please enter a valid email address.");$("proBuyerEmail")?.focus();return;}
-
-  const amount=window.selectedProPlan==="yearly"?799:99;
-  const link=window.selectedProPlan==="yearly"
-    ?window.PRO_PAYMENT_CONFIG.yearlyLink
-    :window.PRO_PAYMENT_CONFIG.monthlyLink;
-
-  if(!link || !/^https:\/\/(rzp\.io|razorpay\.com)\//i.test(link)){
-    alert(
-      "Razorpay payment is not connected yet.\n\n"+
-      "Your selected plan: "+(window.selectedProPlan==="yearly"?"Pro Yearly":"Pro Monthly")+"\n"+
-      "Amount: ₹"+amount+"\n\n"+
-      "Please create the LIVE Razorpay Payment Link for this plan and paste it into PRO_PAYMENT_CONFIG in index.html."
-    );
+window.payWithUpiApp=function(app){
+  const upiId=String(window.PRO_UPI_CONFIG[app]||"").trim();
+  const appNames={gpay:"Google Pay",phonepe:"PhonePe",paytm:"Paytm"};
+  const appName=appNames[app]||"UPI";
+  if(!upiId){
+    alert(appName+" payment is not configured.");
     return;
   }
+  const amount=window.selectedProPlan==="yearly"?799:99;
+  const plan=window.selectedProPlan==="yearly"?"Smart Calculator Pro Yearly":"Smart Calculator Pro Monthly";
+  const params=new URLSearchParams({pa:upiId,pn:"Smart Calculator Pro",am:String(amount),cu:"INR",tn:plan});
+  const uri="upi://pay?"+params.toString();
 
-  /* Keep buyer details locally for the current browser session only.
-     Never store card/UPI PIN/OTP/banking credentials. */
   try{
-    sessionStorage.setItem("proCheckoutBuyer",JSON.stringify({name,mobile,email,gstin:$("proBuyerGSTIN")?.value.trim()||""}));
+    sessionStorage.setItem("proCheckoutBuyer",JSON.stringify({
+      name:$('proBuyerName')?.value.trim()||"",
+      mobile:$('proBuyerMobile')?.value.trim()||"",
+      email:$('proBuyerEmail')?.value.trim()||"",
+      gstin:$('proBuyerGSTIN')?.value.trim()||"",
+      app,
+      upiId,
+      amount
+    }));
   }catch(e){}
 
-  window.location.href=link;
+  window.location.href=uri;
 };
+
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closeProPricing();});
 document.addEventListener("click",function(e){if(e.target&&e.target.id==="proPricingModal")closeProPricing();});
 setUserPlan("free");
