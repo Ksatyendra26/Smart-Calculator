@@ -1678,6 +1678,25 @@ display:block!important;
 
 </style>
 
+
+<style>
+/* Customer database: keep only Customer Name + WhatsApp Mobile Number */
+#dbCustomerFirm,#dbCustomerMobile,#dbCustomerEmail,#dbCustomerGSTIN,#dbCustomerAddress,#dbCustomerCity,#dbCustomerDistrict,#dbCustomerState,#dbCustomerPin,#dbCustomerNotes{display:none!important}
+#dbCustomerFirm,#dbCustomerMobile,#dbCustomerEmail,#dbCustomerGSTIN,#dbCustomerAddress,#dbCustomerCity,#dbCustomerDistrict,#dbCustomerState,#dbCustomerPin,#dbCustomerNotes{display:none!important}
+</style>
+
+<style>
+.form-grid .field:has(#dbCustomerFirm),
+.form-grid .field:has(#dbCustomerMobile),
+.form-grid .field:has(#dbCustomerEmail),
+.form-grid .field:has(#dbCustomerGSTIN),
+.form-grid .field:has(#dbCustomerAddress),
+.form-grid .field:has(#dbCustomerCity),
+.form-grid .field:has(#dbCustomerDistrict),
+.form-grid .field:has(#dbCustomerState),
+.form-grid .field:has(#dbCustomerPin),
+.form-grid .field:has(#dbCustomerNotes){display:none!important}
+</style>
 </head>
 
 <body>
@@ -3200,7 +3219,7 @@ placeholder="Mobile">
 <div class="field">
 
 <label>
-WhatsApp
+WhatsApp Mobile Number *
 </label>
 
 <input
@@ -5017,27 +5036,9 @@ ${escapeHtml(c.name)}
 
 <div class="customer-meta">
 
-${c.firm
+${c.whatsapp
 ?
-escapeHtml(c.firm)+"<br>"
-:
-""}
-
-${c.mobile
-?
-"📱 "+escapeHtml(c.mobile)+"<br>"
-:
-""}
-
-${c.email
-?
-"✉️ "+escapeHtml(c.email)+"<br>"
-:
-""}
-
-${c.gstin
-?
-"GSTIN: "+escapeHtml(c.gstin)
+"📱 "+escapeHtml(c.whatsapp)
 :
 ""}
 
@@ -5049,6 +5050,14 @@ ${c.gstin
 
 
 <div class="customer-actions">
+
+<button
+class="small-btn"
+onclick="shareCustomerWhatsApp('${c.id}')">
+
+💬 WhatsApp
+
+</button>
 
 <button
 class="small-btn"
@@ -6500,10 +6509,7 @@ const box=$("history");
 
 if(!h.length){
 
-box.innerHTML=
-'<div class="empty">
-No saved bills yet.
-</div>';
+box.innerHTML=`<div class="empty">No saved bills yet.</div>`;
 
 return;
 
@@ -6705,10 +6711,7 @@ q.innerHTML="";
 
 if(a<=0){
 
-q.innerHTML=
-'<span class="muted">
-Enter bill amount
-</span>';
+q.innerHTML=`<span class="muted">Enter bill amount</span>`;
 
 return;
 
@@ -6718,10 +6721,7 @@ if(
 typeof QRCode==="undefined"
 ){
 
-q.innerHTML=
-'<span class="muted">
-QR library unavailable
-</span>';
+q.innerHTML=`<span class="muted">QR library unavailable</span>`;
 
 return;
 
@@ -6729,10 +6729,7 @@ return;
 
 if(!upi){
 
-q.innerHTML=
-'<span class="muted">
-Enter UPI ID
-</span>';
+q.innerHTML=`<span class="muted">Enter UPI ID</span>`;
 
 return;
 
@@ -6771,10 +6768,7 @@ console.error(
 error
 );
 
-q.innerHTML=
-'<span class="muted">
-Unable to generate QR
-</span>';
+q.innerHTML=`<span class="muted">Unable to generate QR</span>`;
 
 }
 
@@ -8021,6 +8015,20 @@ initializeApp();
 
 }
 
+
+
+/* ======================================================
+   CUSTOMER WHATSAPP SHARE
+====================================================== */
+window.shareCustomerWhatsApp = function(id){
+  const c=(window.customersData||[]).find(x=>x.id===id);
+  if(!c) return;
+  let number=String(c.whatsapp||'').replace(/\D/g,'');
+  if(number.length===10) number='91'+number;
+  if(!number){ alert('Please save a WhatsApp mobile number first.'); return; }
+  const text=`Hello ${c.name||'Customer'},\n\nThank you for your business with Kushwaha Traders.`;
+  window.open('https://wa.me/'+number+'?text='+encodeURIComponent(text),'_blank','noopener,noreferrer');
+};
 </script>
 
 </body>
