@@ -1,7 +1,7 @@
 // SMART CALCULATOR SERVICE WORKER
-// Version: 2.1.2
+// Version: 2.2.0
 
-const APP_VERSION = "2.1.2";
+const APP_VERSION = "2.2.0";
 const CACHE_NAME = `smart-calculator-${APP_VERSION}`;
 
 const CORE_FILES = [
@@ -10,33 +10,34 @@ const CORE_FILES = [
   "./manifest.json"
 ];
 
-function isSameOrigin(request){
+function isSameOrigin(request) {
   return new URL(request.url).origin === self.location.origin;
 }
 
-function isServiceWorkerFile(request){
+function isServiceWorkerFile(request) {
   return new URL(request.url).pathname.endsWith("/sw.js");
 }
 
-async function putInCache(request, response){
-  if(!response || response.status !== 200) return;
+async function putInCache(request, response) {
+  if (!response || response.status !== 200) return;
 
-  try{
+  try {
     const cache = await caches.open(CACHE_NAME);
     await cache.put(request, response.clone());
-  }catch(error){
+  } catch (error) {
     console.warn("[SW] Cache write failed:", error);
   }
 }
 
+// INSTALL
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(async cache => {
-        for(const file of CORE_FILES){
-          try{
+        for (const file of CORE_FILES) {
+          try {
             await cache.add(file);
-          }catch(error){
+          } catch (error) {
             console.warn("[SW] Could not cache:", file, error);
           }
         }
@@ -45,63 +46,78 @@ self.addEventListener("install", event => {
   );
 });
 
+// ACTIVATE
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then(cacheNames => Promise.all(
-        cacheNames
-          .filter(name =>
-            name.startsWith("smart-calculator-") &&
-            name !== CACHE_NAME
-          )
-          .map(name => caches.delete(name))
-      ))
+      .then(cacheNames => {
+        return Promise.all(
+          cacheNames
+            .filter(name =>
+              name.startsWith("smart-calculator-") &&
+              name !== CACHE_NAME
+            )
+            .map(name => caches.delete(name))
+        );
+      })
       .then(() => self.clients.claim())
   );
 });
 
+// FETCH
 self.addEventListener("fetch", event => {
   const request = event.request;
 
-  if(request.method !== "GET") return;
-  if(!isSameOrigin(request)) return;
-  if(isServiceWorkerFile(request)) return;
+  // Only handle GET requests
+  if (request.method !== "GET") return;
 
-  event.respondWith((async () => {
-    try{
-      const response = await fetch(request, {
-        cache: "no-store"
-      });
+  // Ignore external websites
+  if (!isSameOrigin(request)) return;
 
-      if(response && response.ok){
-        await putInCache(request, response);
-      }
+  // Do not intercept sw.js itself
+  if (isServiceWorkerFile(request)) return;
 
-      return response;
+  event.respondWith(
+    (async () => {
+      try {
+        // Always try the newest version from the server first
+        const response = await fetch(request, {
+          cache: "no-store"
+        });
 
-    }catch(error){
-
-      const cached = await caches.match(request);
-
-      if(cached){
-        return cached;
-      }
-
-      if(request.mode === "navigate"){
-        const index = await caches.match("./index.html");
-
-        if(index){
-          return index;
+        if (response && response.ok) {
+          await putInCache(request, response);
         }
-      }
 
-      throw error;
-    }
-  })());
+        return response;
+
+      } catch (error) {
+        // If internet/server is unavailable,
+        // use the cached version
+        const cached = await caches.match(request);
+
+        if (cached) {
+          return cached;
+        }
+
+        // For page navigation, fall back to index.html
+        if (request.mode === "navigate") {
+          const index = await caches.match("./index.html");
+
+          if (index) {
+            return index;
+          }
+        }
+
+        throw error;
+      }
+    })()
+  );
 });
 
+// FORCE UPDATE
 self.addEventListener("message", event => {
-  if(event.data && event.data.type === "SKIP_WAITING"){
+  if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
 });
