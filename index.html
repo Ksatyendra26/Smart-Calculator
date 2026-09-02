@@ -1268,6 +1268,9 @@ border-color:#263244;
 /* FREE / PRO PLAN UI */
 .plan-box{display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid var(--line);background:var(--soft);border-radius:12px;font-size:11px;font-weight:900}.plan-badge{padding:4px 8px;border-radius:999px;background:#e2e8f0;color:#334155}.plan-badge.pro{background:#fef3c7;color:#92400e}.pro-upgrade{display:none;margin:10px 0;padding:11px 13px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;font-weight:800}.pro-upgrade.show{display:block}.free-only-note{display:none;margin:0 0 10px;padding:10px 12px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:11px;font-weight:800}.free-only-note.show{display:block}.plan-free .pro-field,.plan-free .pro-feature{display:none!important}.plan-free .pro-feature-trigger{position:relative}.plan-free .pro-feature-trigger::after{content:' 🔒';font-size:11px}@media(max-width:850px){.plan-box{padding:6px 8px}.plan-box>span:first-child{display:none}}
 
+
+/* PRO PRICING MODAL */
+.pro-modal{display:none;position:fixed;inset:0;z-index:99999;background:rgba(15,23,42,.72);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:18px}.pro-modal.show{display:flex}.pro-modal-card{width:min(760px,100%);max-height:92vh;overflow:auto;background:var(--card,#fff);border:1px solid var(--line,#e2e8f0);border-radius:24px;box-shadow:0 24px 80px rgba(15,23,42,.28);padding:24px;position:relative}.pro-modal-close{position:absolute;right:16px;top:14px;width:38px;height:38px;border:1px solid var(--line,#e2e8f0);background:var(--soft,#f8fafc);border-radius:50%;font-size:22px;cursor:pointer;color:var(--text,#0f172a)}.pro-modal-head{text-align:center;padding:4px 35px 18px}.pro-modal-icon{font-size:38px;margin-bottom:6px}.pro-modal-head h2{margin:0;font-size:28px}.pro-modal-head p{margin:7px 0 0;color:var(--muted,#64748b);font-size:13px}.pro-pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pro-price-card{border:1px solid var(--line,#e2e8f0);border-radius:18px;padding:20px;background:var(--soft,#f8fafc);position:relative}.pro-price-card.featured{border:2px solid #f59e0b;background:linear-gradient(180deg,#fffbeb,#fff);box-shadow:0 10px 30px rgba(245,158,11,.12)}.pro-popular{position:absolute;right:14px;top:12px;background:#f59e0b;color:#fff;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:900}.pro-price-card h3{margin:0 0 5px;font-size:18px}.pro-price{font-size:34px;font-weight:950;line-height:1.1;margin:8px 0}.pro-price small{font-size:12px;font-weight:700;color:var(--muted,#64748b)}.pro-save{display:inline-block;background:#dcfce7;color:#166534;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;margin-bottom:10px}.pro-list{margin:10px 0 18px;padding:0;list-style:none}.pro-list li{font-size:12px;margin:9px 0;color:var(--text,#334155)}.pro-list li::before{content:'✓';font-weight:900;margin-right:7px;color:#16a34a}.pro-buy-btn{width:100%;padding:11px 14px;border:0;border-radius:11px;font-weight:900;cursor:pointer;font-size:13px}.pro-buy-btn.monthly{background:#0f172a;color:#fff}.pro-buy-btn.yearly{background:#f59e0b;color:#fff}.pro-modal-foot{text-align:center;margin-top:16px;color:var(--muted,#64748b);font-size:10px}.pro-modal-foot strong{color:var(--text,#334155)}@media(max-width:650px){.pro-pricing-grid{grid-template-columns:1fr}.pro-modal-card{padding:18px;border-radius:20px}.pro-modal-head h2{font-size:24px}}
 .login-gate{
 
 position:fixed;
@@ -1962,6 +1965,47 @@ title="Logout">
 </header>
 
 
+
+<!-- PRO PRICING MODAL -->
+<div id="proPricingModal" class="pro-modal" role="dialog" aria-modal="true" aria-labelledby="proPricingTitle">
+  <div class="pro-modal-card" onclick="event.stopPropagation()">
+    <button type="button" class="pro-modal-close" aria-label="Close" onclick="closeProPricing()">×</button>
+    <div class="pro-modal-head">
+      <div class="pro-modal-icon">⭐</div>
+      <h2 id="proPricingTitle">Upgrade to Smart Calculator Pro</h2>
+      <p>Unlock powerful business tools and manage your customers and bills more efficiently.</p>
+    </div>
+    <div class="pro-pricing-grid">
+      <div class="pro-price-card">
+        <h3>Pro Monthly</h3>
+        <div class="pro-price">₹99 <small>/ month</small></div>
+        <ul class="pro-list">
+          <li>Customer Database</li>
+          <li>Advanced customer details</li>
+          <li>UPI Payment & QR</li>
+          <li>Bill History</li>
+          <li>Advanced business tools</li>
+        </ul>
+        <button type="button" class="pro-buy-btn monthly" onclick="selectProPlan('monthly')">Choose ₹99/month</button>
+      </div>
+      <div class="pro-price-card featured">
+        <span class="pro-popular">BEST VALUE</span>
+        <h3>Pro Yearly</h3>
+        <div class="pro-price">₹799 <small>/ year</small></div>
+        <span class="pro-save">Save ₹389 vs monthly</span>
+        <ul class="pro-list">
+          <li>Everything in Pro Monthly</li>
+          <li>12 months of Pro access</li>
+          <li>Better value for regular users</li>
+          <li>All current premium features</li>
+          <li>Future Pro features included</li>
+        </ul>
+        <button type="button" class="pro-buy-btn yearly" onclick="selectProPlan('yearly')">Choose ₹799/year</button>
+      </div>
+    </div>
+    <div class="pro-modal-foot"><strong>Secure payment</strong> • Your Pro access will be activated after payment verification.</div>
+  </div>
+</div>
 <div id="freePlanNote" class="free-only-note">Free plan: Calculator, basic billing, customer Name + Mobile, Print and Share are available. Upgrade to Pro to unlock Customer Database, advanced customer details, UPI payment and Bill History.</div>
 <div id="proUpgrade" class="pro-upgrade">🔒 <strong>Pro features are locked.</strong> Upgrade this account to unlock all premium business tools. <button type="button" class="btn primary" style="margin-left:8px;padding:7px 10px" onclick="showProUpgrade()">Upgrade to Pro</button></div>
 
@@ -4189,7 +4233,21 @@ window.setUserPlan=function(plan){
  const customerBtn=$("customerDatabaseBtn");if(customerBtn)customerBtn.title=isProUser()?"Customer Database":"Customer Database — Pro";
 };
 function requireProFeature(featureName){if(isProUser())return true;alert(featureName+" is a Pro feature. Please upgrade your account to Pro.");return false;}
-window.showProUpgrade=function(){alert("After payment/approval, set this user's Firestore users/{USER_UID} document field to: plan = \"pro\".");};
+window.showProUpgrade=function(){
+  const modal=$("proPricingModal");
+  if(modal){modal.classList.add("show");document.body.style.overflow="hidden";}
+};
+window.closeProPricing=function(){
+  const modal=$("proPricingModal");
+  if(modal){modal.classList.remove("show");document.body.style.overflow="";}
+};
+window.selectProPlan=function(plan){
+  const amount=plan==="yearly"?799:99;
+  const label=plan==="yearly"?"Pro Yearly (₹799/year)":"Pro Monthly (₹99/month)";
+  alert(label+" selected. Payment integration will be connected here next. After successful payment verification, the account plan will be changed to Pro.");
+};
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeProPricing();});
+document.addEventListener("click",function(e){if(e.target&&e.target.id==="proPricingModal")closeProPricing();});
 setUserPlan("free");
 
 /* ======================================================
