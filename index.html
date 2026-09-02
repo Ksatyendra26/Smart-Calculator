@@ -9,7 +9,7 @@
 content="width=device-width,initial-scale=1,viewport-fit=cover">
 
 <meta name="theme-color" content="#0b1220">
-<meta name="app-version" content="2.1.2">
+<meta name="app-version" content="2.2.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -1265,6 +1265,9 @@ border-color:#263244;
    LOGIN
 ========================================================= */
 
+/* FREE / PRO PLAN UI */
+.plan-box{display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid var(--line);background:var(--soft);border-radius:12px;font-size:11px;font-weight:900}.plan-badge{padding:4px 8px;border-radius:999px;background:#e2e8f0;color:#334155}.plan-badge.pro{background:#fef3c7;color:#92400e}.pro-upgrade{display:none;margin:10px 0;padding:11px 13px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;font-weight:800}.pro-upgrade.show{display:block}.free-only-note{display:none;margin:0 0 10px;padding:10px 12px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:11px;font-weight:800}.free-only-note.show{display:block}.plan-free .pro-field,.plan-free .pro-feature{display:none!important}.plan-free .pro-feature-trigger{position:relative}.plan-free .pro-feature-trigger::after{content:' 🔒';font-size:11px}@media(max-width:850px){.plan-box{padding:6px 8px}.plan-box>span:first-child{display:none}}
+
 .login-gate{
 
 position:fixed;
@@ -1888,6 +1891,8 @@ Smart Calculation, Smarter Business
 
 </div>
 
+<div class="plan-box" id="planBox" title="Your account plan"><span>PLAN</span><span id="planBadge" class="plan-badge">FREE</span></div>
+
 <div class="head-actions">
 
 <div class="user-box">
@@ -1915,7 +1920,8 @@ title="Business Profile">
 </button>
 
 <button
-class="icon"
+class="icon pro-feature-trigger"
+id="customerDatabaseBtn"
 onclick="openCustomers()"
 title="Customer Database">
 
@@ -1955,6 +1961,9 @@ title="Logout">
 
 </header>
 
+
+<div id="freePlanNote" class="free-only-note">Free plan: Calculator, basic billing, customer Name + Mobile, Print and Share are available. Upgrade to Pro to unlock Customer Database, advanced customer details, UPI payment and Bill History.</div>
+<div id="proUpgrade" class="pro-upgrade">🔒 <strong>Pro features are locked.</strong> Upgrade this account to unlock all premium business tools. <button type="button" class="btn primary" style="margin-left:8px;padding:7px 10px" onclick="showProUpgrade()">Upgrade to Pro</button></div>
 
 <!-- ======================================================
      MAIN GRID
@@ -2229,6 +2238,7 @@ New
 <!-- CUSTOMER DATABASE PICKER -->
 
 <div
+class="pro-feature"
 style="
 margin-top:12px;
 padding:12px;
@@ -2280,7 +2290,7 @@ oninput="customerFormChanged()">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>Firm Name</label>
 
@@ -2303,7 +2313,7 @@ placeholder="Mobile number">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>WhatsApp</label>
 
@@ -2315,7 +2325,7 @@ placeholder="WhatsApp number">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>Email</label>
 
@@ -2327,7 +2337,7 @@ placeholder="Customer email">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>GSTIN</label>
 
@@ -2338,7 +2348,7 @@ placeholder="Customer GSTIN">
 </div>
 
 
-<div class="field full">
+<div class="field full" pro-field">
 
 <label>Billing Address</label>
 
@@ -2350,7 +2360,7 @@ placeholder="Full customer billing address">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>City</label>
 
@@ -2361,7 +2371,7 @@ placeholder="City">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>District</label>
 
@@ -2372,7 +2382,7 @@ placeholder="District">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>State</label>
 
@@ -2383,7 +2393,7 @@ placeholder="State">
 </div>
 
 
-<div class="field">
+<div class="field" pro-field">
 
 <label>PIN Code</label>
 
@@ -2576,7 +2586,7 @@ onclick="clearItems()">
 ======================================================= -->
 
 <section
-class="card pad payment"
+class="card pad payment pro-feature"
 style="margin-top:16px">
 
 <div class="between">
@@ -2689,7 +2699,7 @@ placeholder="yourbusiness@upi">
      HISTORY
 ======================================================= -->
 
-<section class="card history">
+<section class="card history pro-feature">
 
 <div class="between">
 
@@ -4153,6 +4163,7 @@ await signOut(auth);
 window.currentFirebaseUser = null;
 window.profileData = null;
 window.customersData = [];
+setUserPlan("free");
 
 alert("You have been logged out successfully.");
 
@@ -4166,6 +4177,20 @@ alert("Logout failed: " + (error.message || "Please try again."));
 
 };
 
+
+/* FREE / PRO PLAN CONTROL */
+window.userPlan="free";
+function isProUser(){return window.userPlan==="pro";}
+window.setUserPlan=function(plan){
+ window.userPlan=String(plan||"free").toLowerCase()==="pro"?"pro":"free";
+ document.body.classList.toggle("plan-free",!isProUser());document.body.classList.toggle("plan-pro",isProUser());
+ const badge=$("planBadge");if(badge){badge.textContent=isProUser()?"PRO":"FREE";badge.classList.toggle("pro",isProUser());}
+ const note=$("freePlanNote"),upgrade=$("proUpgrade");if(note)note.classList.toggle("show",!isProUser());if(upgrade)upgrade.classList.toggle("show",!isProUser());
+ const customerBtn=$("customerDatabaseBtn");if(customerBtn)customerBtn.title=isProUser()?"Customer Database":"Customer Database — Pro";
+};
+function requireProFeature(featureName){if(isProUser())return true;alert(featureName+" is a Pro feature. Please upgrade your account to Pro.");return false;}
+window.showProUpgrade=function(){alert("After payment/approval, set this user's Firestore users/{USER_UID} document field to: plan = \"pro\".");};
+setUserPlan("free");
 
 /* ======================================================
    AUTH STATE
@@ -4206,6 +4231,7 @@ renderCustomerSelect();
 }else{
 
 window.currentFirebaseUser=null;
+setUserPlan("free");
 
 gate.classList.add("show");
 
@@ -4340,6 +4366,7 @@ logo:""
 }
 
 applyProfileToUI();
+setUserPlan(window.profileData?.plan || "free");
 
 }catch(error){
 
@@ -4369,6 +4396,7 @@ return;
 }
 
 const data={
+plan:window.userPlan === "pro" ? "pro" : "free",
 
 firmName:
 $("profileFirmName").value.trim(),
@@ -4696,7 +4724,7 @@ $("profileModal")
 
 async function loadCustomers(){
 
-if(!currentFirebaseUser)return;
+if(!currentFirebaseUser || window.userPlan !== "pro")return;
 
 try{
 
@@ -4741,6 +4769,8 @@ error
 
 window.openCustomers=
 function(){
+
+if(!requireProFeature("Customer Database"))return;
 
 $("customerModal")
 .classList.add("show");
@@ -4806,6 +4836,8 @@ $("customerStatus").textContent="";
 
 window.saveCustomer=
 async function(){
+
+if(!requireProFeature("Customer Database"))return;
 
 if(!currentFirebaseUser){
 
@@ -6548,6 +6580,8 @@ ${money(b.total)}
 
 function clearHistory(){
 
+if(!requireProFeature("Bill History"))return;
+
 if(
 confirm(
 "Delete all saved bills?"
@@ -6791,6 +6825,8 @@ Unable to generate QR
 
 function payNow(){
 
+if(!requireProFeature("UPI payment"))return;
+
 const b=
 billData();
 
@@ -6825,6 +6861,8 @@ upiLinkFromTotals(b);
 ====================================================== */
 
 async function sharePayment(){
+
+if(!requireProFeature("UPI payment"))return;
 
 const b=
 billData();
@@ -7897,7 +7935,7 @@ $("installBtn").hidden=true;
   - The version is also used in the Service Worker URL, which forces
     browsers to check the new worker instead of keeping an old one.
 */
-const APP_VERSION = "2.1.2";
+const APP_VERSION = "2.2.0";
 const APP_UPDATE_KEY = "smart_calculator_version";
 const SW_URL = `./sw.js?v=${encodeURIComponent(APP_VERSION)}`;
 
