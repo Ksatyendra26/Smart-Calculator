@@ -1,7 +1,8 @@
-// Smart Calculator Service Worker
-// Version: 2.1.0
+// SMART CALCULATOR SERVICE WORKER
+// Version: 2.1.1
 
-const CACHE_NAME = "smart-calculator-v2.1.0";
+const APP_VERSION = "2.1.1";
+const CACHE_NAME = `smart-calculator-${APP_VERSION}`;
 
 const CORE_FILES = [
   "./",
@@ -9,71 +10,98 @@ const CORE_FILES = [
   "./manifest.json"
 ];
 
-// Install new Service Worker
-self.addEventListener("install", (event) => {
-  console.log("[SW] Installing:", CACHE_NAME);
+function isSameOrigin(request){
+  return new URL(request.url).origin === self.location.origin;
+}
 
+function isServiceWorkerFile(request){
+  return new URL(request.url).pathname.endsWith("/sw.js");
+}
+
+async function putInCache(request, response){
+  if(!response || response.status !== 200) return;
+
+  try{
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(request, response.clone());
+  }catch(error){
+    console.warn("[SW] Cache write failed:", error);
+  }
+}
+
+self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(CORE_FILES))
+      .then(async cache => {
+        for(const file of CORE_FILES){
+          try{
+            await cache.add(file);
+          }catch(error){
+            console.warn("[SW] Could not cache:", file, error);
+          }
+        }
+      })
       .then(() => self.skipWaiting())
   );
 });
 
-// Activate and delete old caches
-self.addEventListener("activate", (event) => {
-  console.log("[SW] Activating:", CACHE_NAME);
-
+self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames
-            .filter((name) => name !== CACHE_NAME)
-            .map((name) => {
-              console.log("[SW] Deleting old cache:", name);
-              return caches.delete(name);
-            })
-        );
-      })
+      .then(cacheNames => Promise.all(
+        cacheNames
+          .filter(name =>
+            name.startsWith("smart-calculator-") &&
+            name !== CACHE_NAME
+          )
+          .map(name => caches.delete(name))
+      ))
       .then(() => self.clients.claim())
   );
 });
 
-// Network-first strategy
-// Always tries to get the newest version from GitHub Pages.
-self.addEventListener("fetch", (event) => {
-  // Only handle GET requests
-  if (event.request.method !== "GET") {
-    return;
-  }
+self.addEventListener("fetch", event => {
+  const request = event.request;
 
-  event.respondWith(
-    fetch(event.request, {
-      cache: "no-store"
-    })
-      .then((response) => {
-        // Save a fresh copy in cache
-        if (response && response.status === 200) {
-          const responseClone = response.clone();
+  if(request.method !== "GET") return;
+  if(!isSameOrigin(request)) return;
+  if(isServiceWorkerFile(request)) return;
 
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
-          });
+  event.respondWith((async () => {
+    try{
+      const response = await fetch(request, {
+        cache: "no-store"
+      });
+
+      if(response && response.ok){
+        await putInCache(request, response);
+      }
+
+      return response;
+
+    }catch(error){
+
+      const cached = await caches.match(request);
+
+      if(cached){
+        return cached;
+      }
+
+      if(request.mode === "navigate"){
+        const index = await caches.match("./index.html");
+
+        if(index){
+          return index;
         }
+      }
 
-        return response;
-      })
-      .catch(() => {
-        // If internet is unavailable, use cached version
-        return caches.match(event.request);
-      })
-  );
+      throw error;
+    }
+  })());
 });
 
-// Allow the webpage to tell the Service Worker to update immediately
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
+self.addEventListener("message", event => {
+  if(event.data && event.data.type === "SKIP_WAITING"){
     self.skipWaiting();
   }
 });
