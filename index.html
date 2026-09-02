@@ -7891,26 +7891,60 @@ $("installBtn").hidden=true;
    SERVICE WORKER + AUTOMATIC UPDATE
 ====================================================== */
 
-const APP_VERSION = "2.1.0";
+/*
+  IMPORTANT:
+  - Change APP_VERSION whenever you upload a new index.html / sw.js.
+  - The version is also used in the Service Worker URL, which forces
+    browsers to check the new worker instead of keeping an old one.
+*/
+const APP_VERSION = "2.1.1";
 const APP_UPDATE_KEY = "smart_calculator_version";
+const SW_URL = `./sw.js?v=${encodeURIComponent(APP_VERSION)}`;
+
+async function clearSmartCalculatorCaches(){
+  if(!("caches" in window)) return;
+
+  try{
+    const cacheNames = await caches.keys();
+    await Promise.all(
+      cacheNames
+        .filter(name => name.startsWith("smart-calculator-"))
+        .map(name => caches.delete(name))
+    );
+  }catch(error){
+    console.warn("Cache cleanup failed:", error);
+  }
+}
+
+async function requestServiceWorkerUpdate(registration){
+  try{
+    await registration.update();
+  }catch(error){
+    console.warn("Service Worker update check failed:", error);
+  }
+
+  if(registration.waiting){
+    registration.waiting.postMessage({type:"SKIP_WAITING"});
+  }
+}
 
 async function updateAppVersion(){
   try{
     const oldVersion = localStorage.getItem(APP_UPDATE_KEY);
 
     if(oldVersion && oldVersion !== APP_VERSION){
-      if("caches" in window){
-        const keys = await caches.keys();
-        await Promise.all(keys.map(key => caches.delete(key)));
-      }
-
+      await clearSmartCalculatorCaches();
       localStorage.setItem(APP_UPDATE_KEY, APP_VERSION);
 
       if("serviceWorker" in navigator){
         const registrations = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(registrations.map(reg => reg.update()));
+        await Promise.all(registrations.map(requestServiceWorkerUpdate));
       }
 
+      /*
+        Reload once after an application-version change so the page is
+        definitely read again after old browser caches have been removed.
+      */
       if(!sessionStorage.getItem("smart_update_reloaded")){
         sessionStorage.setItem("smart_update_reloaded","1");
         location.reload();
@@ -7922,7 +7956,7 @@ async function updateAppVersion(){
 
     sessionStorage.removeItem("smart_update_reloaded");
   }catch(error){
-    console.warn("Automatic update check failed:", error);
+    console.warn("Automatic application update check failed:", error);
   }
 }
 
@@ -7930,16 +7964,35 @@ if("serviceWorker" in navigator){
   window.addEventListener("load", async ()=>{
     try{
       const registration = await navigator.serviceWorker.register(
-        "sw.js?v=2.1.0",
+        SW_URL,
         {updateViaCache:"none"}
       );
 
-      await registration.update();
+      /* Always check GitHub Pages for a newer worker. */
+      await requestServiceWorkerUpdate(registration);
 
-      if(registration.waiting){
-        registration.waiting.postMessage({type:"SKIP_WAITING"});
-      }
+      /*
+        If a new worker becomes available after this check, activate it
+        immediately. This avoids making users wait for another visit.
+      */
+      registration.addEventListener("updatefound", ()=>{
+        const newWorker = registration.installing;
+        if(!newWorker) return;
 
+        newWorker.addEventListener("statechange", ()=>{
+          if(
+            newWorker.state === "installed" &&
+            navigator.serviceWorker.controller
+          ){
+            newWorker.postMessage({type:"SKIP_WAITING"});
+          }
+        });
+      });
+
+      /*
+        The active worker changes only when a new worker takes control.
+        Reload exactly once for that update.
+      */
       navigator.serviceWorker.addEventListener("controllerchange", ()=>{
         if(!sessionStorage.getItem("smart_sw_reloaded")){
           sessionStorage.setItem("smart_sw_reloaded","1");
@@ -7947,12 +8000,12 @@ if("serviceWorker" in navigator){
         }
       });
 
-      console.log("Service Worker updated:", registration.scope);
+      console.log("Service Worker ready:", registration.scope);
     }catch(error){
       console.warn("Service Worker registration failed:", error);
     }
 
-    updateAppVersion();
+    await updateAppVersion();
   });
 }else{
   updateAppVersion();
